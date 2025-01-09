@@ -57,6 +57,17 @@ module.exports = {
     ],
 
     // Deactivated
+    'no-console': 'off',
+    'import/no-cycle': 'off',
+    'eslint-comments/require-description': 'off',
+    '@typescript-eslint/unbound-method': 'off',
+    '@typescript-eslint/no-unsafe-enum-comparison': 'off',
+    '@typescript-eslint/only-throw-error': 'off',
+    '@typescript-eslint/no-extraneous-class': 'off',
+    '@typescript-eslint/method-signature-style': 'off',
+    '@typescript-eslint/no-namespace': 'off',
+    '@typescript-eslint/naming-convention': 'off',
+    '@typescript-eslint/no-unsafe-assignment': 'off',
     '@typescript-eslint/dot-notation': 'off', // paths are used with a dot notation
     '@typescript-eslint/no-misused-promises': 'off', // onClick with async fails
     '@typescript-eslint/no-non-null-assertion': 'off', // sometimes compiler is unable to detect
@@ -76,6 +87,7 @@ module.exports = {
     'no-redeclare': 'off', // conflict with TypeScript function overloads
     'react/jsx-fragments': 'off', // personal style
     'react/prop-types': 'off', // TypeScript is used for type checking
+    'react/jsx-no-leaked-render': 'off',
 
     '@next/next/no-img-element': 'off', // Temporary disabled
   },
