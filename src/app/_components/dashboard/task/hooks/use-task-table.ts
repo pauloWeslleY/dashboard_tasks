@@ -14,10 +14,12 @@ import {
   type SelectAllRowTaskTableType,
 } from '../types';
 import { useGetTasks } from './use-get-tasks';
+import { useUpdateStatusTaskMutation } from './use-update-status-task-mutation';
 
 export function useTaskTable() {
   const [pageTask, setPageTask] = useState<number>(0);
   const [rowsPerPageTask, setRowsPerPageTask] = useState<number>(5);
+  const { updateStatusTask } = useUpdateStatusTaskMutation();
   const {
     data: getTasks = [],
     error: errorTasks,
@@ -25,8 +27,13 @@ export function useTaskTable() {
     isLoading: isLoadingTasks,
   } = useGetTasks();
 
+  const taskIds = useMemo<string[]>(
+    () => getTasks.map((task) => task.id),
+    [getTasks]
+  );
+
   const { selectAll, deselectAll, selectOne, deselectOne, selected } =
-    useSelection(getTasks.map((task) => task.id));
+    useSelection(taskIds);
 
   // const loadTaskListSearch = useMemo<TaskModel[]>(() => {
   //   const taskDescriptionRegexp = new RegExp(taskDescription, 'i');
@@ -104,7 +111,9 @@ export function useTaskTable() {
   }
 
   function handlerToggleAllTask(status: boolean) {
-    console.log(status);
+    selected.forEach((taskId) => {
+      updateStatusTask({ id: taskId, status });
+    });
   }
 
   function noop() {

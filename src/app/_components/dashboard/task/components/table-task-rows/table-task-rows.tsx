@@ -29,7 +29,7 @@ export function TableTaskRows({ tasks }: TableTaskRowsProps) {
     <React.Fragment>
       {columnsTableTask.map((task) => {
         return (
-          <TableCell key={task.title} sx={{ textAlign: 'center' }}>
+          <TableCell key={task.title}>
             <Typography
               variant="subtitle1"
               sx={{

@@ -1,3 +1,5 @@
+'use client';
+
 import React, { forwardRef, type ComponentProps } from 'react';
 import FormControl from '@mui/material/FormControl';
 import FormHelperText from '@mui/material/FormHelperText';

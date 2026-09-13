@@ -1,7 +1,9 @@
 import React, { forwardRef } from 'react';
 import Fade from '@mui/material/Fade';
 
-import { type ModelDeleteAllTaskBackdropProps } from './types';
+interface ModelDeleteAllTaskBackdropProps {
+  open?: boolean;
+}
 
 export const ModalDeleteAllTaskBackdrop = forwardRef<
   HTMLDivElement,

@@ -1,31 +1,23 @@
 import { useState } from 'react';
+import { useDeleteTaskMutation } from '@/app/_components/dashboard/task/hooks/use-delete-task-mutation';
+import { deleteTaskAction } from '@/server-action/task';
+import { useMutation, useQueryClient } from '@tanstack/react-query';
 
-export function useModalDeleteTask(taskId: string) {
-  const [openModalDeleteTask, setOpenModalDeleteTask] =
-    useState(false);
+export function useModalDeleteTask(onCloseModal?: () => void) {
+  const { deleteTask, isPendingDeleteTask } = useDeleteTaskMutation();
 
-  function handlerOpenModalDeleteTask(): void {
-    setOpenModalDeleteTask(true);
+  function onCloseModalDeleteTask() {
+    if (isPendingDeleteTask || !onCloseModal) return;
+    onCloseModal();
   }
 
-  function handlerCloseModalDeleteTask(): void {
-    setOpenModalDeleteTask(false);
-  }
-
-  function onCloseModalDeleteTask(): void {
-    setOpenModalDeleteTask(false);
-  }
-
-  function handlerDeleteTask(): void {
-    console.log('Deleting task with ID:', taskId);
+  function handlerDeleteTask(taskId: string) {
+    deleteTask(taskId);
   }
 
   return {
-    isPendingTaskDelete: false,
-    openModalDeleteTask,
+    isPendingDeleteTask,
     onCloseModalDeleteTask,
     handlerDeleteTask,
-    handlerOpenModalDeleteTask,
-    handlerCloseModalDeleteTask,
   };
 }

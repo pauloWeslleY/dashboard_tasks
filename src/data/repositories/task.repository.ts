@@ -10,7 +10,10 @@ export class TaskRepository implements ITaskRepository {
   constructor(private db: IDatabase) {}
 
   async create(
-    params: Omit<TaskModel, 'id' | 'createAt' | 'updateAt'>
+    params: Pick<
+      TaskModel,
+      'name' | 'description' | 'category' | 'userId'
+    >
   ): Promise<TaskModel> {
     const [result] = await this.db
       .insert(schema.tasksTable)
@@ -18,7 +21,7 @@ export class TaskRepository implements ITaskRepository {
         name: params.name,
         description: params.description,
         category: params.category,
-        status: params.status,
+        status: false,
         userId: params.userId,
       })
       .returning();
@@ -27,7 +30,10 @@ export class TaskRepository implements ITaskRepository {
   }
 
   async save(
-    params: Omit<TaskModel, 'createAt' | 'updateAt'>
+    params: Pick<
+      TaskModel,
+      'id' | 'name' | 'description' | 'category'
+    >
   ): Promise<TaskModel> {
     const [result] = await this.db
       .update(schema.tasksTable)

@@ -8,11 +8,11 @@ import Backdrop from '@mui/material/Backdrop';
 import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
 import CircularProgress from '@mui/material/CircularProgress';
+import Collapse from '@mui/material/Collapse';
 import Dialog from '@mui/material/Dialog';
 import DialogActions from '@mui/material/DialogActions';
 import DialogContent from '@mui/material/DialogContent';
 import DialogTitle from '@mui/material/DialogTitle';
-import Stack from '@mui/material/Stack';
 import Typography from '@mui/material/Typography';
 import { PlusCircle as PlusCircleIcon } from '@phosphor-icons/react/dist/ssr/PlusCircle';
 import { Controller } from 'react-hook-form';
@@ -30,7 +30,7 @@ export function DialogCreateTaskForm() {
     handleOpenModalCreateTask,
     handleCloseModalCreateTask,
     onCloseModalFormCreateTask,
-    isSubmitting,
+    isPendingCreateTask,
   } = useFormCreateTask();
 
   return (
@@ -66,7 +66,7 @@ export function DialogCreateTaskForm() {
         }}
       >
         <Backdrop
-          open={isSubmitting}
+          open={isPendingCreateTask}
           sx={(theme) => ({
             color: theme.palette.common.white,
             zIndex: theme.zIndex.drawer + 1,
@@ -86,10 +86,17 @@ export function DialogCreateTaskForm() {
           Cadastrar Tarefa
         </Typography>
 
-        <DialogContent>
-          <Stack spacing={2} sx={{ padding: 1 }}>
+        <DialogContent sx={{ paddingInline: 2 }}>
+          <Box
+            sx={{
+              paddingY: 2,
+              display: 'flex',
+              flexDirection: 'column',
+              gap: 2,
+            }}
+          >
             <Controller
-              name="nameTask"
+              name="name"
               control={control}
               render={({ field }) => {
                 return (
@@ -97,14 +104,14 @@ export function DialogCreateTaskForm() {
                     {...field}
                     label="Nome da tarefa"
                     placeholder="Digite o nome da tarefa"
-                    error={Boolean(errors.nameTask)}
-                    helperText={errors.nameTask?.message}
+                    error={Boolean(errors.name)}
+                    helperText={errors.name?.message}
                   />
                 );
               }}
             />
             <Controller
-              name="descriptionTask"
+              name="description"
               control={control}
               render={({ field }) => {
                 return (
@@ -112,14 +119,14 @@ export function DialogCreateTaskForm() {
                     {...field}
                     label="Descrição da tarefa"
                     placeholder="Digite a descrição da tarefa"
-                    error={Boolean(errors.descriptionTask)}
-                    helperText={errors.descriptionTask?.message}
+                    error={Boolean(errors.description)}
+                    helperText={errors.description?.message}
                   />
                 );
               }}
             />
             <Controller
-              name="categoryTask"
+              name="category"
               control={control}
               render={({ field }) => {
                 return (
@@ -129,19 +136,27 @@ export function DialogCreateTaskForm() {
                     label="Categoria da tarefa"
                     placeholder="Selecione a categoria da tarefa"
                     options={loadCategoryOptions}
-                    error={Boolean(errors.categoryTask)}
-                    helperText={errors.categoryTask?.message}
+                    error={Boolean(errors.category)}
+                    helperText={errors.category?.message}
                   />
                 );
               }}
             />
-          </Stack>
+          </Box>
+
+          <Collapse
+            in={Boolean(errors.root)}
+            timeout="auto"
+            unmountOnExit
+          >
+            <Alert severity="error">{errors.root?.message}</Alert>
+          </Collapse>
         </DialogContent>
 
         <DialogActions>
           <Button
             onClick={handleCloseModalCreateTask}
-            disabled={isSubmitting}
+            disabled={isPendingCreateTask}
             color="error"
             variant="outlined"
           >
@@ -149,22 +164,22 @@ export function DialogCreateTaskForm() {
           </Button>
           <Button
             onClick={handlerCreateTask}
-            disabled={isSubmitting}
+            disabled={isPendingCreateTask}
             variant="contained"
             sx={{ display: 'flex', alignItem: 'center', gap: 1 }}
           >
-            {isSubmitting && (
+            {isPendingCreateTask && (
               <CircularProgress
                 size="20px"
                 sx={{
-                  color: isSubmitting
+                  color: isPendingCreateTask
                     ? 'primary.light'
                     : 'common.white',
                 }}
               />
             )}
 
-            {isSubmitting ? 'Criando...' : 'Criar Tarefa'}
+            {isPendingCreateTask ? 'Criando...' : 'Criar Tarefa'}
           </Button>
         </DialogActions>
       </Dialog>

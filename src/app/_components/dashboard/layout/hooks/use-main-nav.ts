@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { usePopover } from '@/app/hooks/use-popover';
 import { setMenuNav } from '@/main/store/ducks/menu-nav';
+import { createMenuNavActionType } from '@/main/store/ducks/menu-nav/actions/menu-nav.actions';
 import {
   useAppDispatch,
   useAppSelector,
@@ -23,7 +24,7 @@ export function useMainNav(): UseMainNavProps {
   }
 
   function handlerToggleMenuNav(): void {
-    dispatch(setMenuNav());
+    dispatch(createMenuNavActionType(!menuNav));
   }
 
   return {

@@ -7,7 +7,8 @@ export function useGetTasks() {
   return useQuery({
     queryKey: ['tasks'],
     queryFn: async () => {
-      const response = await axios.get<TaskModel[]>('/api/tasks');
+      const response =
+        await axios.get<TaskModel[]>('/api/tasks/list');
       return response.data;
     },
   });

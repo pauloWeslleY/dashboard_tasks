@@ -1,4 +1,4 @@
-import { taskRepository } from '@/main/factories/repositories/task-repository.factory';
+import { taskServices } from '@/main/factories/repositories/task-repository.factory';
 
 interface RouteParams {
   params: {
@@ -10,6 +10,6 @@ export async function GET(
   _request: Request,
   { params }: RouteParams
 ) {
-  const task = await taskRepository.findById(params.id);
+  const task = await taskServices.findById(params.id);
   return Response.json(task);
 }

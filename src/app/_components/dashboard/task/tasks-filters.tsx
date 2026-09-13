@@ -24,7 +24,11 @@ export function TasksFilters(): React.JSX.Element {
 
   return (
     <Card sx={{ padding: 2 }}>
-      <Stack direction="row" spacing={2} sx={{ alignItems: 'center' }}>
+      <Stack
+        direction="row"
+        spacing={2}
+        sx={{ alignItems: 'center' }}
+      >
         <OutlinedInput
           placeholder="Pesquisar tarefas"
           fullWidth

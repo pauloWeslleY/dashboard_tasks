@@ -1,4 +1,5 @@
-import React from 'react';
+'use client';
+
 import Backdrop from '@mui/material/Backdrop';
 import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
@@ -12,14 +13,20 @@ import {
   Trash as TrashIcon,
 } from '@phosphor-icons/react/dist/ssr/Trash';
 
-import { useModalDeleteAllTask } from './hooks';
+import { useModalDeleteAllTask } from './hooks/use-modal-delete-all-task';
 import * as S from './styles';
 
-export function ModalDeleteAllTask() {
+interface ModalDeleteAllTaskProps {
+  taskIds: Set<string>;
+}
+
+export function ModalDeleteAllTask({
+  taskIds,
+}: ModalDeleteAllTaskProps) {
   const {
     openModalDeleteAllTask,
     onCloseModalDeleteAllTask,
-    isPendingTaskDelete,
+    isPendingDeleteTask,
     handlerDeleteAllTask,
     handlerOpenModalDeleteAllTask,
     handlerCloseModalDeleteAllTask,
@@ -31,7 +38,7 @@ export function ModalDeleteAllTask() {
         variant="contained"
         color="error"
         onClick={handlerOpenModalDeleteAllTask}
-        startIcon={<Box component={TrashIcon} />}
+        startIcon={<TrashIcon />}
       >
         Excluir todas
       </Button>
@@ -47,7 +54,7 @@ export function ModalDeleteAllTask() {
         <Fade in={openModalDeleteAllTask}>
           <S.ModalContent sx={{ width: 450 }}>
             <Backdrop
-              open={isPendingTaskDelete}
+              open={isPendingDeleteTask}
               sx={(theme) => ({
                 color: theme.palette.common.white,
                 zIndex: theme.zIndex.drawer + 1,
@@ -95,7 +102,7 @@ export function ModalDeleteAllTask() {
                 <Button
                   variant="contained"
                   color="error"
-                  onClick={handlerDeleteAllTask}
+                  onClick={() => handlerDeleteAllTask(taskIds)}
                 >
                   Excluir
                 </Button>

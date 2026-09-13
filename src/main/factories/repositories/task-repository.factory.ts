@@ -7,4 +7,4 @@ const makeTaskRepositoryFactory = (): ITaskRepository => {
   return new TaskRepository(db);
 };
 
-export const taskRepository = makeTaskRepositoryFactory();
+export const taskServices = makeTaskRepositoryFactory();

@@ -18,7 +18,7 @@ export function UpdateTask({ control, errors }: UpdateTaskProps) {
   return (
     <Stack spacing={2} sx={{ padding: 1 }}>
       <Controller
-        name="nameTask"
+        name="name"
         control={control}
         render={({ field }) => {
           return (
@@ -26,14 +26,14 @@ export function UpdateTask({ control, errors }: UpdateTaskProps) {
               {...field}
               label="Nome da tarefa"
               placeholder="Digite o nome da tarefa"
-              error={Boolean(errors.nameTask)}
-              helperText={errors.nameTask?.message}
+              error={Boolean(errors.name)}
+              helperText={errors.name?.message}
             />
           );
         }}
       />
       <Controller
-        name="descriptionTask"
+        name="description"
         control={control}
         render={({ field }) => {
           return (
@@ -41,14 +41,14 @@ export function UpdateTask({ control, errors }: UpdateTaskProps) {
               {...field}
               label="Descrição da tarefa"
               placeholder="Digite a descrição da tarefa"
-              error={Boolean(errors.descriptionTask)}
-              helperText={errors.descriptionTask?.message}
+              error={Boolean(errors.description)}
+              helperText={errors.description?.message}
             />
           );
         }}
       />
       <Controller
-        name="categoryTask"
+        name="category"
         control={control}
         render={({ field }) => {
           return (
@@ -58,8 +58,8 @@ export function UpdateTask({ control, errors }: UpdateTaskProps) {
               label="Categoria da tarefa"
               placeholder="Selecione a categoria da tarefa"
               options={loadCategoryOptions}
-              error={Boolean(errors.categoryTask)}
-              helperText={errors.categoryTask?.message}
+              error={Boolean(errors.category)}
+              helperText={errors.category?.message}
             />
           );
         }}

@@ -11,7 +11,9 @@ export interface Selection<T = string> {
 }
 
 // IMPORTANT: To prevent infinite loop, `keys` argument must be memoized with React.useMemo hook.
-export function useSelection<T = string>(keys: T[] = []): Selection<T> {
+export function useSelection<T = string>(
+  keys: T[] = []
+): Selection<T> {
   const [selected, setSelected] = useState<Set<T>>(new Set());
 
   useEffect(() => {

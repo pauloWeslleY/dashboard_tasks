@@ -84,7 +84,8 @@ export function TasksTable() {
           spacing={1.5}
           sx={{ justifyContent: 'end', margin: 1.5 }}
         >
-          <ModalDeleteAllTask />
+          <ModalDeleteAllTask taskIds={selected} />
+
           <Button
             size="small"
             variant="contained"

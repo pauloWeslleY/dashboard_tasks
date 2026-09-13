@@ -1,9 +1,4 @@
-export type { UseCustomerFilterProps } from './use-task-filter.type';
-export type {
-  UseTasksTableParams,
-  UseTasksTableProps,
-  SelectAllRowTaskTableType,
-  ApplyTaskPaginationType,
-} from './use-task-table.type';
-export type { FormTaskType } from './form-task.type';
-export type { UseTaskListType } from './use-task-list.type';
+export type * from './use-task-filter.type';
+export type * from './use-task-table.type';
+export type * from './form-task.type';
+export type * from './use-task-list.type';

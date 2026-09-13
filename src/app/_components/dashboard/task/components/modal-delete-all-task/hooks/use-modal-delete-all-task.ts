@@ -1,29 +1,30 @@
 import { useState } from 'react';
 
-import { type UseModalDeleteAllTaskProps } from '../types';
+import { useDeleteTaskMutation } from '../../../hooks/use-delete-task-mutation';
 
-export function useModalDeleteAllTask(): UseModalDeleteAllTaskProps {
+export function useModalDeleteAllTask() {
   const [openModalDeleteAllTask, setOpenModalDeleteAllTask] =
     useState(false);
-  const isPendingTaskDelete = false;
-  function handlerOpenModalDeleteAllTask(): void {
+  const { deleteTask, isPendingDeleteTask } = useDeleteTaskMutation();
+
+  function handlerOpenModalDeleteAllTask() {
     setOpenModalDeleteAllTask(true);
   }
 
-  function handlerCloseModalDeleteAllTask(): void {
+  function handlerCloseModalDeleteAllTask() {
     setOpenModalDeleteAllTask(false);
   }
 
-  function onCloseModalDeleteAllTask(): void {
+  function onCloseModalDeleteAllTask() {
     setOpenModalDeleteAllTask(false);
   }
 
-  function handlerDeleteAllTask(): void {
-    console.log('handlerDeleteAllTask called');
+  function handlerDeleteAllTask(taskIds: Set<string>) {
+    taskIds.forEach((taskId) => deleteTask(taskId));
   }
 
   return {
-    isPendingTaskDelete,
+    isPendingDeleteTask,
     openModalDeleteAllTask,
     onCloseModalDeleteAllTask,
     handlerDeleteAllTask,

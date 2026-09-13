@@ -1,3 +1,5 @@
+'use client';
+
 import React, { forwardRef, useState } from 'react';
 import FormControl from '@mui/material/FormControl';
 import FormHelperText from '@mui/material/FormHelperText';
@@ -34,7 +36,7 @@ export const InputPassword = forwardRef<
     ...props
   },
   ref
-): React.JSX.Element {
+) {
   const [showPassword, setShowPassword] = useState<boolean>(false);
 
   const InputPasswordIcon: Record<PasswordType, React.ReactElement> =

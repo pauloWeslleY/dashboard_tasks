@@ -1,86 +1,136 @@
 import { useCallback, useEffect, useState } from 'react';
-import { useSearchParams } from 'next/navigation';
+import {
+  usePathname,
+  useRouter,
+  useSearchParams,
+} from 'next/navigation';
 import { TaskSchema } from '@/app/_components/dashboard/task/schemas';
 import { type FormTaskType } from '@/app/_components/dashboard/task/types';
 import { loadCategoryOptions } from '@/app/database/category-options';
+import { updateTaskAction } from '@/server-action/task';
 import { zodResolver } from '@hookform/resolvers/zod';
+import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { useForm } from 'react-hook-form';
+
+import { TaskModel } from '@/data/models/task.model';
 
 import { useGetTaskId } from '../../../hooks/use-get-task-id';
 
-export function useFormUpdateTask() {
-  const [openDialogUpdateTask, setOpenDialogUpdateTask] =
-    useState(false);
+export function useFormUpdateTask(
+  taskId: string,
+  openDialogUpdateTask: boolean,
+  onCloseModal?: () => void
+) {
+  const queryClient = useQueryClient();
+  const router = useRouter();
+  const pathname = usePathname();
   const {
-    setValue,
+    reset,
+    setError,
     control,
     handleSubmit,
-    formState: { errors, isSubmitting },
+    formState: { errors },
   } = useForm<FormTaskType>({
     resolver: zodResolver(TaskSchema),
     defaultValues: {
-      nameTask: '',
-      descriptionTask: '',
-      categoryTask: '',
+      name: '',
+      description: '',
+      category: '',
     },
   });
-  const searchParamsTaskId = useSearchParams();
-  const taskId = searchParamsTaskId.get('taskId');
-  const { getTask } = useGetTaskId();
+  const { getTask } = useGetTaskId(openDialogUpdateTask, taskId);
+
+  const { mutate: updateTask, isPending: isPendingUpdateTask } =
+    useMutation({
+      mutationFn: (data: {
+        name: string;
+        description: string;
+        category: string;
+        id: string;
+      }) => updateTaskAction(data),
+    });
 
   const getUpdateDataFormTask = useCallback(() => {
     if (!getTask) return;
     const categoryCurrent = loadCategoryOptions.filter(
       (category) => category.value === getTask.category
     );
-    setValue('nameTask', getTask.name);
-    setValue('descriptionTask', getTask.description);
-    setValue('categoryTask', categoryCurrent[0]?.value ?? '');
-  }, [getTask, setValue]);
+    reset({
+      name: getTask.name,
+      description: getTask.description,
+      category: categoryCurrent[0]?.value ?? '',
+    });
+  }, [getTask, reset]);
 
   useEffect(() => {
     getUpdateDataFormTask();
   }, [getUpdateDataFormTask]);
 
-  function handlerOpenDialogUpdateTask(): void {
-    setOpenDialogUpdateTask(true);
-  }
-
-  function handlerCloseDialogUpdateTask(): void {
-    setOpenDialogUpdateTask(false);
-  }
-
-  function hasErrorsFormUpdateTask(): boolean {
-    return Boolean(
-      errors.nameTask?.message &&
-        errors.descriptionTask?.message &&
-        errors.categoryTask?.message
-    );
-  }
-
-  const loadTitleButtonUpdateTask = isSubmitting
+  const loadTitleButtonUpdateTask = isPendingUpdateTask
     ? 'Carregando...'
     : 'Editar';
-  const colorIconCircleProgress = isSubmitting
+
+  const colorIconCircleProgress = isPendingUpdateTask
     ? 'primary.light'
     : 'common.white';
 
-  function onCloseDialogFormUpdateTask(): void {
-    if (hasErrorsFormUpdateTask()) return;
+  function handlerCloseDialogUpdateTask() {
+    onCloseModal?.();
+  }
+
+  function onCloseDialogFormUpdateTask() {
+    if (isPendingUpdateTask) return;
+
+    if (onCloseModal) {
+      onCloseModal();
+    }
+
     handlerCloseDialogUpdateTask();
   }
 
-  function onUpdateTask(data: FormTaskType): void {
-    console.log(data);
-  }
-
-  async function handlerUpdateTask(): Promise<void> {
-    await handleSubmit(onUpdateTask)();
-  }
+  const handlerUpdateTask = handleSubmit((data) => {
+    if (!taskId) {
+      setError('root', {
+        type: 'manual',
+        message: 'Usuário não autenticado.',
+      });
+      return;
+    }
+    updateTask(
+      { ...data, id: taskId },
+      {
+        onSuccess: async (result) => {
+          if (!result.success) {
+            setError('root', {
+              type: 'manual',
+              message: result.error,
+            });
+            return;
+          }
+          await queryClient.invalidateQueries({
+            queryKey: ['tasks'],
+          });
+          if (taskId) {
+            await queryClient.invalidateQueries({
+              queryKey: ['task', taskId],
+            });
+          }
+          reset(data);
+          onCloseDialogFormUpdateTask();
+        },
+        onError: (error) => {
+          setError('root', {
+            type: 'manual',
+            message: error?.message || 'Erro ao atualizar tarefa.',
+          });
+        },
+      }
+    );
+  });
 
   return {
     taskId,
-    isSubmitting,
+    isPendingUpdateTask,
     control,
     errors,
     loadTitleButtonUpdateTask,
@@ -88,7 +138,6 @@ export function useFormUpdateTask() {
     onCloseDialogFormUpdateTask,
     openDialogUpdateTask,
     handlerUpdateTask,
-    handlerOpenDialogUpdateTask,
     handlerCloseDialogUpdateTask,
   };
 }

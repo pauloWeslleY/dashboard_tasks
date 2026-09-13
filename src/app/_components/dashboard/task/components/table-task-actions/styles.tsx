@@ -1,4 +1,3 @@
-import React from 'react';
 import Menu, { type MenuProps } from '@mui/material/Menu';
 import { alpha, styled } from '@mui/material/styles';
 

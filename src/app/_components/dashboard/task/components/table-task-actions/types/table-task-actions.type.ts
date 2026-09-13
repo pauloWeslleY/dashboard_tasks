@@ -3,15 +3,10 @@ export enum TASK_STATUS {
   NOT_DONE = 'NOT_DONE',
 }
 
-const TaskStatus = {
-  [TASK_STATUS.DONE]: 'DONE',
-  [TASK_STATUS.NOT_DONE]: 'NOT_DONE',
-} as const;
+export type TaskStatusType = keyof typeof TASK_STATUS;
 
-export type TaskStatusType = (typeof TaskStatus)[keyof typeof TaskStatus];
-
-export interface TableTaskActionsType {
-  taskId: string;
-  taskStatus: boolean;
-  isSelected: boolean;
-}
+export const taskStatusValues = (
+  taskStatus: boolean
+): TaskStatusType => {
+  return taskStatus ? TASK_STATUS.DONE : TASK_STATUS.NOT_DONE;
+};

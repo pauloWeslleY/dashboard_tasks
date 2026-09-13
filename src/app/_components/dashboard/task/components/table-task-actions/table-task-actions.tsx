@@ -1,9 +1,11 @@
 'use client';
 
-import React, { type ReactElement } from 'react';
+import React, { useMemo, useState, type ReactElement } from 'react';
 import Alert from '@mui/material/Alert';
+import Box from '@mui/material/Box';
 import Fade from '@mui/material/Fade';
 import IconButton from '@mui/material/IconButton';
+import MenuItem from '@mui/material/MenuItem';
 import Slide from '@mui/material/Slide';
 import Snackbar from '@mui/material/Snackbar';
 import Stack from '@mui/material/Stack';
@@ -12,22 +14,33 @@ import Tooltip from '@mui/material/Tooltip';
 import Typography from '@mui/material/Typography';
 import { Checks as ChecksIcon } from '@phosphor-icons/react/dist/ssr/Checks';
 import { DotsThreeCircleVertical as DotsThreeCircleVerticalIcon } from '@phosphor-icons/react/dist/ssr/DotsThreeCircleVertical';
+import { PencilSimple as PencilSimpleIcon } from '@phosphor-icons/react/dist/ssr/PencilSimple';
 import { Timer as TimerIcon } from '@phosphor-icons/react/dist/ssr/Timer';
+import { Trash as TrashIcon } from '@phosphor-icons/react/dist/ssr/Trash';
 
 import { DialogUpdateTask, ModalDeleteTask } from './components';
 import { useTableTaskActions } from './hooks/use-table-task-actions';
 import { StyledMenu } from './styles';
 import {
   TASK_STATUS,
-  type TableTaskActionsType,
+  taskStatusValues,
   type TaskStatusType,
-} from './types';
+} from './types/table-task-actions.type';
+
+interface TableTaskActionsType {
+  taskId: string;
+  taskStatus: boolean;
+  isSelected: boolean;
+}
 
 export function TableTaskActions({
   taskId,
   taskStatus,
   isSelected,
 }: TableTaskActionsType) {
+  const [openUpdateDialog, setOpenUpdateDialog] = useState(false);
+  const [openDeleteModal, setOpenDeleteModal] = useState(false);
+
   const {
     openMenuTaskTableActions,
     anchorMenuElTaskTableActions,
@@ -42,9 +55,23 @@ export function TableTaskActions({
     taskSelected: isSelected,
   });
 
-  const TASK_STATUS_ICONS: Record<TaskStatusType, ReactElement> = {
-    [TASK_STATUS.DONE]: <ChecksIcon />,
-    [TASK_STATUS.NOT_DONE]: <TimerIcon />,
+  const loadTaskStatus = useMemo<ReactElement>(() => {
+    const TASK_STATUS_ICONS: Record<TaskStatusType, ReactElement> = {
+      [TASK_STATUS.DONE]: <ChecksIcon />,
+      [TASK_STATUS.NOT_DONE]: <TimerIcon />,
+    };
+
+    return TASK_STATUS_ICONS[taskStatusValues(taskStatus)];
+  }, [taskStatus]);
+
+  const handleOpenUpdateDialog = () => {
+    handlerCloseMenuTaskTableActions();
+    setOpenUpdateDialog(true);
+  };
+
+  const handleOpenDeleteModal = () => {
+    handlerCloseMenuTaskTableActions();
+    setOpenDeleteModal(true);
   };
 
   return (
@@ -62,11 +89,7 @@ export function TableTaskActions({
             color={taskStatus ? 'success' : 'warning'}
             onClick={handlerToggleTaskStatus}
           >
-            {
-              TASK_STATUS_ICONS[
-                taskStatus ? TASK_STATUS.DONE : TASK_STATUS.NOT_DONE
-              ]
-            }
+            {loadTaskStatus}
           </IconButton>
         </Tooltip>
 
@@ -102,10 +125,40 @@ export function TableTaskActions({
           'aria-labelledby': 'update-task-button',
         }}
       >
-        <DialogUpdateTask />
+        <Stack
+          direction="row"
+          spacing={1.5}
+          component={MenuItem}
+          disableRipple
+          onClick={handleOpenUpdateDialog}
+        >
+          <Box component={PencilSimpleIcon} />
+          Editar
+        </Stack>
 
-        <ModalDeleteTask taskId={taskId} />
+        <Stack
+          direction="row"
+          spacing={1.5}
+          component={MenuItem}
+          disableRipple
+          onClick={handleOpenDeleteModal}
+        >
+          <Box component={TrashIcon} />
+          Excluir
+        </Stack>
       </StyledMenu>
+
+      <DialogUpdateTask
+        taskId={taskId}
+        open={openUpdateDialog}
+        onClose={() => setOpenUpdateDialog(false)}
+      />
+
+      <ModalDeleteTask
+        taskId={taskId}
+        open={openDeleteModal}
+        onClose={() => setOpenDeleteModal(false)}
+      />
 
       <Snackbar
         open={openSnackbarTaskTableActions}

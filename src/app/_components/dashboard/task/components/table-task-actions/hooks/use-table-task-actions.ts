@@ -1,17 +1,17 @@
 import {
-  useCallback,
   useState,
   type MouseEvent,
   type SyntheticEvent,
 } from 'react';
-import {
-  usePathname,
-  useRouter,
-  useSearchParams,
-} from 'next/navigation';
 import { type SnackbarCloseReason } from '@mui/material/Snackbar';
 
-import { type UseTableTaskActionsParams } from '../types';
+import { useUpdateStatusTaskMutation } from '../../../hooks/use-update-status-task-mutation';
+
+interface UseTableTaskActionsParams {
+  taskId: string;
+  taskSelected: boolean;
+  taskStatus: boolean;
+}
 
 export function useTableTaskActions({
   taskId,
@@ -26,49 +26,37 @@ export function useTableTaskActions({
     openSnackbarTaskTableActions,
     setOpenSnackbarTaskTableActions,
   ] = useState(false);
-  const searchParams = useSearchParams();
-  const pathname = usePathname();
-  const router = useRouter();
+  const { updateStatusTask } = useUpdateStatusTaskMutation();
 
   const openMenuTaskTableActions = Boolean(
     anchorMenuElTaskTableActions
   );
 
-  const createSearchParamsTaskURL = useCallback((): void => {
-    const newSearchParams = new URLSearchParams(
-      searchParams.toString()
-    );
-    newSearchParams.set('taskId', taskId);
-    const searchParamsURL = `${pathname}?${newSearchParams.toString()}`;
-    router.push(searchParamsURL);
-  }, [taskId, searchParams, router, pathname]);
-
   function handlerCloseSnackbarTaskTableActions(
     _event?: SyntheticEvent | Event,
     reason?: SnackbarCloseReason
-  ): void {
+  ) {
     if (reason === 'clickaway') return;
     setOpenSnackbarTaskTableActions(false);
   }
 
   function handlerOpenMenuTaskTableActions(
     event: MouseEvent<HTMLElement>
-  ): void {
-    createSearchParamsTaskURL();
+  ) {
     setAnchorMenuElTaskTableActions(event.currentTarget);
   }
 
-  function handlerCloseMenuTaskTableActions(): void {
+  function handlerCloseMenuTaskTableActions() {
     setAnchorMenuElTaskTableActions(null);
   }
 
-  function handlerToggleTaskStatus(): void {
+  function handlerToggleTaskStatus() {
     if (!taskSelected) {
       setOpenSnackbarTaskTableActions(true);
       return;
     }
 
-    console.log({ taskId, status: !taskStatus });
+    updateStatusTask({ id: taskId, status: !taskStatus });
   }
 
   return {

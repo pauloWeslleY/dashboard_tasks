@@ -1,6 +1,6 @@
-import { taskRepository } from '@/main/factories/repositories/task-repository.factory';
+import { taskServices } from '@/main/factories/repositories/task-repository.factory';
 
 export async function GET() {
-  const tasksList = await taskRepository.findAll();
+  const tasksList = await taskServices.findAll();
   return Response.json(tasksList);
 }

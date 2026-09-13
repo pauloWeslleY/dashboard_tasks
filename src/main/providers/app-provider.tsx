@@ -1,6 +1,6 @@
 'use client';
 
-import React, { type ReactNode } from 'react';
+import { type ReactNode } from 'react';
 import { ThemeProvider } from '@/app/_components/core/theme-provider/theme-provider';
 import store from '@/main/store/store';
 import { LocalizationProvider } from '@mui/x-date-pickers';
@@ -13,19 +13,23 @@ import { Provider } from 'react-redux';
 
 import 'dayjs/locale/pt-br';
 
+import { MenuNavProvider } from './menu-nav-provider';
+
 const makeQueryClient = () => new QueryClient();
 
 export function AppProvider({ children }: { children: ReactNode }) {
   return (
     <Provider store={store}>
-      <LocalizationProvider
-        dateAdapter={AdapterDayjs}
-        adapterLocale="pt-br"
-      >
-        <QueryClientProvider client={makeQueryClient()}>
-          <ThemeProvider>{children}</ThemeProvider>
-        </QueryClientProvider>
-      </LocalizationProvider>
+      <MenuNavProvider>
+        <LocalizationProvider
+          dateAdapter={AdapterDayjs}
+          adapterLocale="pt-br"
+        >
+          <QueryClientProvider client={makeQueryClient()}>
+            <ThemeProvider>{children}</ThemeProvider>
+          </QueryClientProvider>
+        </LocalizationProvider>
+      </MenuNavProvider>
     </Provider>
   );
 }
