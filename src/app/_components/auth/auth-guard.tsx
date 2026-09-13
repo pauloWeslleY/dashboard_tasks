@@ -3,10 +3,13 @@
 import React from 'react';
 import { logger } from '@/main/lib/default-logger';
 
-import { useAuthGuard } from './hooks';
-import { type AuthGuardProps } from './types';
+import { useAuthGuard } from './hooks/use-auth-guard';
 
-export function AuthGuard({ children }: AuthGuardProps): React.JSX.Element | null {
+export function AuthGuard({
+  children,
+}: {
+  children: React.ReactNode;
+}) {
   const { isChecking } = useAuthGuard({ logger });
 
   if (isChecking) return null;

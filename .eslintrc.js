@@ -89,6 +89,7 @@ module.exports = {
     'react/prop-types': 'off', // TypeScript is used for type checking
     'react/jsx-no-leaked-render': 'off',
 
-    '@next/next/no-img-element': 'off', // Temporary disabled
+    '@next/next/no-img-element': 'off', // Temporary disabled,
+    '@typescript-eslint/explicit-function-return-type': 'off',
   },
 };

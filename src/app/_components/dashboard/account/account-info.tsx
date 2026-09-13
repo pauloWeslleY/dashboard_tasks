@@ -1,6 +1,7 @@
 'use client';
 
 import React from 'react';
+import { authClient } from '@/infra/auth/auth-client';
 import Avatar from '@mui/material/Avatar';
 import Button from '@mui/material/Button';
 import Card from '@mui/material/Card';
@@ -11,11 +12,11 @@ import Stack from '@mui/material/Stack';
 import Typography from '@mui/material/Typography';
 import { CloudArrowUp as CloudArrowUpIcon } from '@phosphor-icons/react/dist/ssr';
 
-import { useAccountInfo, useUploadPhotoUser } from './hooks';
+import { useUploadPhotoUser } from './hooks';
 import * as S from './visually-hidden-input';
 
 export function AccountInfo(): React.JSX.Element {
-  const { userAuthenticated } = useAccountInfo();
+  const { data } = authClient.useSession();
   const { prevFile, handlerInputChangeFile } = useUploadPhotoUser();
 
   return (
@@ -23,14 +24,16 @@ export function AccountInfo(): React.JSX.Element {
       <CardContent>
         <Stack spacing={2} sx={{ alignItems: 'center' }}>
           <div>
-            <Avatar src={prevFile} sx={{ height: '80px', width: '80px' }} />
+            <Avatar
+              src={prevFile}
+              sx={{ height: '80px', width: '80px' }}
+            />
           </div>
 
           <Stack spacing={1} sx={{ textAlign: 'center' }}>
-            <Typography variant="h5">{userAuthenticated?.username}</Typography>
-
+            <Typography variant="h5">{data?.user?.name}</Typography>
             <Typography color="text.secondary" variant="body2">
-              {userAuthenticated?.email}
+              {data?.user?.email}
             </Typography>
           </Stack>
         </Stack>
@@ -48,7 +51,11 @@ export function AccountInfo(): React.JSX.Element {
           startIcon={<CloudArrowUpIcon />}
         >
           Upload files
-          <S.VisuallyHiddenInput type="file" onChange={handlerInputChangeFile} multiple />
+          <S.VisuallyHiddenInput
+            type="file"
+            onChange={handlerInputChangeFile}
+            multiple
+          />
         </Button>
       </CardActions>
     </Card>

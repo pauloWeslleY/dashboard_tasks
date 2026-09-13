@@ -14,21 +14,32 @@ import Typography from '@mui/material/Typography';
 import { Controller } from 'react-hook-form';
 
 import { InputField, InputPassword } from '../ui';
-import { useSignUpForm } from './hooks';
+import { useSignUpForm } from './hooks/use-sign-up-form';
 import { AuthLoading } from './loading';
 
-export function SignUpForm(): React.JSX.Element {
-  const { errors, isError, control, isLoading, errorMessage, handleSubmit, handlerSignUpOnSubmit } = useSignUpForm();
+export function SignUpForm() {
+  const {
+    errors,
+    control,
+    isSubmitting,
+    handleSubmit,
+    handlerSignUpOnSubmit,
+  } = useSignUpForm();
 
   return (
     <Stack spacing={3}>
-      <AuthLoading open={isLoading} message="Autenticando..." />
+      <AuthLoading open={isSubmitting} message="Autenticando..." />
 
       <Stack spacing={1}>
         <Typography variant="h4">Sign up</Typography>
         <Typography color="text.secondary" variant="body2">
           Already have an account?{' '}
-          <Link component={RouterLink} href={paths.auth.signIn} underline="hover" variant="subtitle2">
+          <Link
+            component={RouterLink}
+            href={paths.auth.signIn}
+            underline="hover"
+            variant="subtitle2"
+          >
             Sign in
           </Link>
         </Typography>
@@ -45,7 +56,7 @@ export function SignUpForm(): React.JSX.Element {
                   {...field}
                   label="Nome"
                   error={Boolean(errors.firstName)}
-                  helperText={errors.firstName?.message}
+                  errorText={errors.firstName?.message}
                 />
               );
             }}
@@ -59,7 +70,7 @@ export function SignUpForm(): React.JSX.Element {
                   {...field}
                   label="Sobrenome"
                   error={Boolean(errors.lastName)}
-                  helperText={errors.lastName?.message}
+                  errorText={errors.lastName?.message}
                 />
               );
             }}
@@ -73,7 +84,7 @@ export function SignUpForm(): React.JSX.Element {
                   {...field}
                   label="Username"
                   error={Boolean(errors.username)}
-                  helperText={errors.username?.message}
+                  errorText={errors.username?.message}
                 />
               );
             }}
@@ -87,7 +98,7 @@ export function SignUpForm(): React.JSX.Element {
                   {...field}
                   label="E-mail"
                   error={Boolean(errors.email)}
-                  helperText={errors.email?.message}
+                  errorText={errors.email?.message}
                 />
               );
             }}
@@ -102,7 +113,7 @@ export function SignUpForm(): React.JSX.Element {
                   id="password"
                   label="Senha"
                   error={Boolean(errors.password)}
-                  helperText={errors.password?.message}
+                  errorText={errors.password?.message}
                 />
               );
             }}
@@ -116,12 +127,18 @@ export function SignUpForm(): React.JSX.Element {
                   control={<Checkbox {...field} />}
                   label={
                     <React.Fragment>
-                      I have read the <Link>terms and conditions</Link>
+                      I have read the{' '}
+                      <Link>terms and conditions</Link>
                     </React.Fragment>
                   }
                 />
                 {errors.terms && (
-                  <FormHelperText error sx={{ fontSize: (theme) => theme.typography.pxToRem(14) }}>
+                  <FormHelperText
+                    error
+                    sx={(theme) => ({
+                      fontSize: theme.typography.pxToRem(14),
+                    })}
+                  >
                     {errors.terms.message}
                   </FormHelperText>
                 )}
@@ -134,13 +151,12 @@ export function SignUpForm(): React.JSX.Element {
               {errors.root.message}
             </Alert>
           )}
-          {isError && (
-            <Alert severity="error" color="error">
-              {errorMessage}
-            </Alert>
-          )}
 
-          <Button disabled={isLoading} type="submit" variant="contained">
+          <Button
+            disabled={isSubmitting}
+            type="submit"
+            variant="contained"
+          >
             Sign up
           </Button>
         </Stack>

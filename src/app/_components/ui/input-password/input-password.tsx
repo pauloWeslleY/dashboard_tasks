@@ -1,19 +1,45 @@
-import React, { forwardRef, useState, type ReactElement } from 'react';
+import React, { forwardRef, useState } from 'react';
 import FormControl from '@mui/material/FormControl';
 import FormHelperText from '@mui/material/FormHelperText';
 import InputLabel from '@mui/material/InputLabel';
 import OutlinedInput from '@mui/material/OutlinedInput';
+import { styled } from '@mui/material/styles';
 import { Eye as EyeIcon } from '@phosphor-icons/react/dist/ssr/Eye';
 import { EyeSlash as EyeSlashIcon } from '@phosphor-icons/react/dist/ssr/EyeSlash';
 
-import { INPUT_PASSWORD, type InputPasswordProps, type PasswordType } from './types';
+import {
+  InputPasswordType,
+  type InputPasswordProps,
+  type PasswordType,
+} from './input-password.type';
 
-export const InputPassword = forwardRef<HTMLSelectElement, InputPasswordProps>(
-  ({ id = '', label = '', name = '', helperText = '', error = false, ...props }, ref): React.JSX.Element => {
-    const [showPassword, setShowPassword] = useState<boolean>(false);
+const StyledFormHelperText = styled(FormHelperText, {
+  name: 'FormText',
+  slot: 'root',
+})(({ theme }) => ({
+  fontSize: theme.typography.pxToRem(14),
+}));
 
-    const InputPasswordIcon: Record<PasswordType, ReactElement> = {
-      [INPUT_PASSWORD.PASSWORD]: (
+export const InputPassword = forwardRef<
+  HTMLSelectElement,
+  InputPasswordProps
+>(function InputPassword(
+  {
+    id = '',
+    label = '',
+    name = '',
+    helperText = '',
+    errorText = '',
+    error = false,
+    ...props
+  },
+  ref
+): React.JSX.Element {
+  const [showPassword, setShowPassword] = useState<boolean>(false);
+
+  const InputPasswordIcon: Record<PasswordType, React.ReactElement> =
+    {
+      [InputPasswordType.PASSWORD]: (
         <EyeSlashIcon
           cursor="pointer"
           fontSize="var(--icon-fontSize-md)"
@@ -22,7 +48,7 @@ export const InputPassword = forwardRef<HTMLSelectElement, InputPasswordProps>(
           }}
         />
       ),
-      [INPUT_PASSWORD.TEXT]: (
+      [InputPasswordType.TEXT]: (
         <EyeIcon
           cursor="pointer"
           fontSize="var(--icon-fontSize-md)"
@@ -33,26 +59,35 @@ export const InputPassword = forwardRef<HTMLSelectElement, InputPasswordProps>(
       ),
     };
 
-    return (
-      <FormControl error={error} size="small">
-        <InputLabel htmlFor={name}>{label}</InputLabel>
-        <OutlinedInput
-          {...props}
-          ref={ref}
-          id={id}
-          label={label}
-          name={name}
-          type={showPassword ? 'text' : 'password'}
-          endAdornment={InputPasswordIcon[showPassword ? INPUT_PASSWORD.TEXT : INPUT_PASSWORD.PASSWORD]}
-        />
-        {helperText && (
-          <FormHelperText error={error} sx={{ fontSize: (theme) => theme.typography.pxToRem(14) }}>
-            {helperText}
-          </FormHelperText>
-        )}
-      </FormControl>
-    );
-  }
-);
+  return (
+    <FormControl error={error} size="small">
+      <InputLabel htmlFor={name}>{label}</InputLabel>
+      <OutlinedInput
+        {...props}
+        ref={ref}
+        id={id}
+        label={label}
+        name={name}
+        type={showPassword ? 'text' : 'password'}
+        endAdornment={
+          InputPasswordIcon[
+            showPassword
+              ? InputPasswordType.TEXT
+              : InputPasswordType.PASSWORD
+          ]
+        }
+      />
+      {helperText && (
+        <StyledFormHelperText>{helperText}</StyledFormHelperText>
+      )}
+
+      {errorText && (
+        <StyledFormHelperText error={error}>
+          {errorText}
+        </StyledFormHelperText>
+      )}
+    </FormControl>
+  );
+});
 
 InputPassword.displayName = 'InputPassword';

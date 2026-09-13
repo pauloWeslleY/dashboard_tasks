@@ -17,7 +17,9 @@ class AuthClient {
     localStorage.setItem(userStorageKey, JSON.stringify(data));
   }
 
-  async signInWithOAuth(_: ISignInWithOAuthParams): Promise<{ error?: string }> {
+  async signInWithOAuth(
+    _: ISignInWithOAuthParams
+  ): Promise<{ error?: string }> {
     return { error: 'Social authentication not implemented' };
   }
 
@@ -25,11 +27,15 @@ class AuthClient {
     localStorage.setItem(userStorageKey, JSON.stringify(data));
   }
 
-  async resetPassword(_: IResetPasswordParams): Promise<{ error?: string }> {
+  async resetPassword(
+    _: IResetPasswordParams
+  ): Promise<{ error?: string }> {
     return { error: 'Password reset not implemented' };
   }
 
-  async updatePassword(_: IResetPasswordParams): Promise<{ error?: string }> {
+  async updatePassword(
+    _: IResetPasswordParams
+  ): Promise<{ error?: string }> {
     return { error: 'Update reset not implemented' };
   }
 

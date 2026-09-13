@@ -19,17 +19,20 @@ import TablePagination from '@mui/material/TablePagination';
 import TableRow from '@mui/material/TableRow';
 import Typography from '@mui/material/Typography';
 
-import { ModalDeleteAllTask, TableTaskActions, TableTaskRows } from './components';
+import {
+  ModalDeleteAllTask,
+  TableTaskActions,
+  TableTaskRows,
+} from './components';
 import { useTaskTable } from './hooks/use-task-table';
 import { CustomNoRowsOverlay } from './not-rows';
 
-export function TasksTable(): React.JSX.Element {
+export function TasksTable() {
   const {
     page,
     rowsPerPage,
-    loadTaskList,
+    getTasks,
     isLoadingTasks,
-    isPendingTasks,
     paginatedTasks,
     selected,
     selectedSome,
@@ -46,7 +49,7 @@ export function TasksTable(): React.JSX.Element {
   return (
     <Card>
       <Backdrop
-        open={isLoadingTasks || isPendingTasks}
+        open={isLoadingTasks}
         sx={(theme) => ({
           color: theme.palette.common.white,
           zIndex: theme.zIndex.drawer + 2,
@@ -65,7 +68,10 @@ export function TasksTable(): React.JSX.Element {
             background: (theme) => theme.palette.neutral[800],
           }}
         >
-          <CircularProgress size={65} sx={{ color: 'primary.light' }} />
+          <CircularProgress
+            size={40}
+            sx={{ color: 'primary.light' }}
+          />
           <Typography variant="h3" color="primary.light">
             Loading...
           </Typography>
@@ -73,7 +79,11 @@ export function TasksTable(): React.JSX.Element {
       </Backdrop>
 
       <Collapse in={selectedAll}>
-        <Stack direction="row" spacing={1.5} sx={{ justifyContent: 'end', margin: 1.5 }}>
+        <Stack
+          direction="row"
+          spacing={1.5}
+          sx={{ justifyContent: 'end', margin: 1.5 }}
+        >
           <ModalDeleteAllTask />
           <Button
             size="small"
@@ -127,7 +137,10 @@ export function TasksTable(): React.JSX.Element {
 
                 {loadTaskTableHeader.map((props) => {
                   return (
-                    <TableCell key={props} sx={{ textAlign: 'center' }}>
+                    <TableCell
+                      key={props}
+                      sx={{ textAlign: 'center' }}
+                    >
                       {props}
                     </TableCell>
                   );
@@ -147,14 +160,21 @@ export function TasksTable(): React.JSX.Element {
                       <Checkbox
                         checked={isSelected}
                         onChange={(event) => {
-                          handlerSelectRowTaskTable({ event, rowId: task.id });
+                          handlerSelectRowTaskTable({
+                            event,
+                            rowId: task.id,
+                          });
                         }}
                       />
                     </TableCell>
 
                     <TableTaskRows tasks={task} />
 
-                    <TableTaskActions taskId={task.id} taskStatus={task.status} isSelected={isSelected} />
+                    <TableTaskActions
+                      taskId={task.id}
+                      taskStatus={task.status}
+                      isSelected={isSelected}
+                    />
                   </TableRow>
                 );
               })}
@@ -169,7 +189,7 @@ export function TasksTable(): React.JSX.Element {
 
           <TablePagination
             component="div"
-            count={loadTaskList.length}
+            count={getTasks.length}
             onPageChange={handlerPageChange}
             onRowsPerPageChange={handlerRowsPerPageChange}
             page={page}

@@ -18,7 +18,14 @@ import { MobileNav } from './mobile-nav';
 import { UserPopover } from './user-popover';
 
 export function MainNav(): React.JSX.Element {
-  const { mainNav, menuNav, userPopover, handlerOpenMainNav, handlerCloseMainNav, handlerToggleMenuNav } = useMainNav();
+  const {
+    mainNav,
+    menuNav,
+    userPopover,
+    handlerOpenMainNav,
+    handlerCloseMainNav,
+    handlerToggleMenuNav,
+  } = useMainNav();
 
   return (
     <React.Fragment>
@@ -42,13 +49,20 @@ export function MainNav(): React.JSX.Element {
             paddingX: 2,
           }}
         >
-          <Stack sx={{ alignItems: 'center' }} direction="row" spacing={2}>
-            <IconButton onMouseOver={handlerOpenMainNav} sx={{ display: { lg: 'none' } }}>
+          <Stack
+            sx={{ alignItems: 'center' }}
+            direction="row"
+            spacing={2}
+          >
+            <IconButton
+              onMouseOver={handlerOpenMainNav}
+              sx={{ display: { lg: 'none' } }}
+            >
               <ListIcon />
             </IconButton>
 
             <Tooltip title="Button menu collapse">
-              <IconButton onClick={handlerToggleMenuNav} sx={{ display: { xs: 'none' } }}>
+              <IconButton onClick={handlerToggleMenuNav}>
                 {!menuNav ? <TextIndentIcon /> : <ListIcon />}
               </IconButton>
             </Tooltip>
@@ -60,7 +74,11 @@ export function MainNav(): React.JSX.Element {
             </Tooltip>
           </Stack>
 
-          <Stack sx={{ alignItems: 'center' }} direction="row" spacing={2}>
+          <Stack
+            sx={{ alignItems: 'center' }}
+            direction="row"
+            spacing={2}
+          >
             <Tooltip title="Contacts">
               <IconButton>
                 <UsersIcon />

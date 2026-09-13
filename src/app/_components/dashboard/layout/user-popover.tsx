@@ -15,8 +15,11 @@ import { User as UserIcon } from '@phosphor-icons/react/dist/ssr/User';
 import { useMenuPopover } from './hooks/use-menu-popover';
 import { type UserPopoverProps } from './types';
 
-export function UserPopover({ onCloseMenuItem, ...props }: UserPopoverProps): React.JSX.Element {
-  const { loadUser, handlerSignOut } = useMenuPopover();
+export function UserPopover({
+  onCloseMenuItem,
+  ...props
+}: UserPopoverProps): React.JSX.Element {
+  const { user, handlerSignOut } = useMenuPopover();
 
   return (
     <Popover
@@ -29,11 +32,11 @@ export function UserPopover({ onCloseMenuItem, ...props }: UserPopoverProps): Re
         },
       }}
     >
-      {loadUser && (
+      {user && (
         <Box sx={{ p: '16px 20px' }}>
-          <Typography variant="subtitle1">{loadUser.username}</Typography>
+          <Typography variant="subtitle1">{user.name}</Typography>
           <Typography color="text.secondary" variant="body2">
-            {loadUser.email}
+            {user.email}
           </Typography>
         </Box>
       )}
@@ -49,13 +52,21 @@ export function UserPopover({ onCloseMenuItem, ...props }: UserPopoverProps): Re
           },
         }}
       >
-        <MenuItem component={RouterLink} href={paths.dashboard.settings} onClick={onCloseMenuItem}>
+        <MenuItem
+          component={RouterLink}
+          href={paths.dashboard.settings}
+          onClick={onCloseMenuItem}
+        >
           <ListItemIcon>
             <GearSixIcon fontSize="var(--icon-fontSize-md)" />
           </ListItemIcon>
           Settings
         </MenuItem>
-        <MenuItem component={RouterLink} href={paths.dashboard.account} onClick={onCloseMenuItem}>
+        <MenuItem
+          component={RouterLink}
+          href={paths.dashboard.account}
+          onClick={onCloseMenuItem}
+        >
           <ListItemIcon>
             <UserIcon fontSize="var(--icon-fontSize-md)" />
           </ListItemIcon>

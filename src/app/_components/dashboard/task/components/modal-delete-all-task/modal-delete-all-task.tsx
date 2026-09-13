@@ -7,12 +7,15 @@ import Fade from '@mui/material/Fade';
 import Paper from '@mui/material/Paper';
 import Stack from '@mui/material/Stack';
 import Typography from '@mui/material/Typography';
-import { Trash, Trash as TrashIcon } from '@phosphor-icons/react/dist/ssr/Trash';
+import {
+  Trash,
+  Trash as TrashIcon,
+} from '@phosphor-icons/react/dist/ssr/Trash';
 
 import { useModalDeleteAllTask } from './hooks';
 import * as S from './styles';
 
-export function ModalDeleteAllTask(): React.JSX.Element {
+export function ModalDeleteAllTask() {
   const {
     openModalDeleteAllTask,
     onCloseModalDeleteAllTask,
@@ -66,17 +69,34 @@ export function ModalDeleteAllTask(): React.JSX.Element {
               </Stack>
             </Backdrop>
 
-            <Stack direction="column" spacing={2} sx={{ alignItems: 'center', justifyContent: 'center' }}>
-              <Box component={Trash} sx={{ width: 75, height: 75, color: 'error.main' }} />
+            <Stack
+              direction="column"
+              spacing={2}
+              sx={{ alignItems: 'center', justifyContent: 'center' }}
+            >
+              <Box
+                component={Trash}
+                sx={{ width: 75, height: 75, color: 'error.main' }}
+              />
 
               <Stack>
-                <Typography variant="h5">Deseja excluir todas as tarefa?</Typography>
+                <Typography variant="h5">
+                  Deseja excluir todas as tarefa?
+                </Typography>
               </Stack>
               <Stack direction="row" spacing={1.5}>
-                <Button variant="outlined" color="secondary" onClick={handlerCloseModalDeleteAllTask}>
+                <Button
+                  variant="outlined"
+                  color="secondary"
+                  onClick={handlerCloseModalDeleteAllTask}
+                >
                   Cancelar
                 </Button>
-                <Button variant="contained" color="error" onClick={handlerDeleteAllTask}>
+                <Button
+                  variant="contained"
+                  color="error"
+                  onClick={handlerDeleteAllTask}
+                >
                   Excluir
                 </Button>
               </Stack>

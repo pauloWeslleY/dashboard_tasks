@@ -54,12 +54,15 @@ export default function NotFound(): React.JSX.Element {
             textAlign: 'center',
           }}
         >
-          You either tried some shady route or you came here by mistake. Whichever it is, try using the navigation
+          You either tried some shady route or you came here by
+          mistake. Whichever it is, try using the navigation
         </Typography>
         <Button
           component={RouterLink}
           href={paths.home}
-          startIcon={<ArrowLeftIcon fontSize="var(--icon-fontSize-md)" />}
+          startIcon={
+            <ArrowLeftIcon fontSize="var(--icon-fontSize-md)" />
+          }
           variant="contained"
         >
           Go back to home

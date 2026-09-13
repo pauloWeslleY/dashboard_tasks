@@ -1,12 +1,20 @@
 import React from 'react';
+import { type FormTaskType } from '@/app/_components/dashboard/task/types';
 import { InputField, SelectField } from '@/app/_components/ui';
 import { loadCategoryOptions } from '@/app/database/category-options';
 import Stack from '@mui/material/Stack';
-import { Controller } from 'react-hook-form';
+import {
+  Controller,
+  type Control,
+  type FieldErrors,
+} from 'react-hook-form';
 
-import { type UpdateTaskProps } from './types';
+interface UpdateTaskProps {
+  control: Control<FormTaskType>;
+  errors: FieldErrors<FormTaskType>;
+}
 
-export function UpdateTask({ control, errors }: UpdateTaskProps): React.JSX.Element {
+export function UpdateTask({ control, errors }: UpdateTaskProps) {
   return (
     <Stack spacing={2} sx={{ padding: 1 }}>
       <Controller

@@ -15,11 +15,19 @@ import { DotsThreeCircleVertical as DotsThreeCircleVerticalIcon } from '@phospho
 import { Timer as TimerIcon } from '@phosphor-icons/react/dist/ssr/Timer';
 
 import { DialogUpdateTask, ModalDeleteTask } from './components';
-import { useTableTaskActions } from './hooks';
+import { useTableTaskActions } from './hooks/use-table-task-actions';
 import { StyledMenu } from './styles';
-import { TASK_STATUS, type TableTaskActionsType, type TaskStatusType } from './types';
+import {
+  TASK_STATUS,
+  type TableTaskActionsType,
+  type TaskStatusType,
+} from './types';
 
-export function TableTaskActions({ taskId, taskStatus, isSelected }: TableTaskActionsType): React.JSX.Element {
+export function TableTaskActions({
+  taskId,
+  taskStatus,
+  isSelected,
+}: TableTaskActionsType) {
   const {
     openMenuTaskTableActions,
     anchorMenuElTaskTableActions,
@@ -28,7 +36,11 @@ export function TableTaskActions({ taskId, taskStatus, isSelected }: TableTaskAc
     handlerCloseMenuTaskTableActions,
     handlerCloseSnackbarTaskTableActions,
     handlerToggleTaskStatus,
-  } = useTableTaskActions({ taskId, taskStatus, taskSelected: isSelected });
+  } = useTableTaskActions({
+    taskId,
+    taskStatus,
+    taskSelected: isSelected,
+  });
 
   const TASK_STATUS_ICONS: Record<TaskStatusType, ReactElement> = {
     [TASK_STATUS.DONE]: <ChecksIcon />,
@@ -37,14 +49,24 @@ export function TableTaskActions({ taskId, taskStatus, isSelected }: TableTaskAc
 
   return (
     <TableCell>
-      <Stack direction="row" spacing={1} sx={{ justifyContent: 'end' }}>
-        <Tooltip title={taskStatus ? 'Desmarcar Tarefas' : 'Marcar tarefa'}>
+      <Stack
+        direction="row"
+        spacing={1}
+        sx={{ justifyContent: 'end' }}
+      >
+        <Tooltip
+          title={taskStatus ? 'Desmarcar Tarefas' : 'Marcar tarefa'}
+        >
           <IconButton
             aria-label="toggle task status"
             color={taskStatus ? 'success' : 'warning'}
             onClick={handlerToggleTaskStatus}
           >
-            {TASK_STATUS_ICONS[taskStatus ? TASK_STATUS.DONE : TASK_STATUS.NOT_DONE]}
+            {
+              TASK_STATUS_ICONS[
+                taskStatus ? TASK_STATUS.DONE : TASK_STATUS.NOT_DONE
+              ]
+            }
           </IconButton>
         </Tooltip>
 
@@ -54,8 +76,14 @@ export function TableTaskActions({ taskId, taskStatus, isSelected }: TableTaskAc
               id="update-task-button"
               aria-label="more"
               aria-haspopup="true"
-              aria-controls={openMenuTaskTableActions ? 'update-task-menu' : undefined}
-              aria-expanded={openMenuTaskTableActions ? 'true' : undefined}
+              aria-controls={
+                openMenuTaskTableActions
+                  ? 'update-task-menu'
+                  : undefined
+              }
+              aria-expanded={
+                openMenuTaskTableActions ? 'true' : undefined
+              }
               onClick={handlerOpenMenuTaskTableActions}
               color="primary"
             >
@@ -92,7 +120,9 @@ export function TableTaskActions({ taskId, taskStatus, isSelected }: TableTaskAc
           variant="filled"
           sx={{ width: '100%', color: 'common.white' }}
         >
-          <Typography variant="subtitle1">Selecione uma tarefa!</Typography>
+          <Typography variant="subtitle1">
+            Selecione uma tarefa!
+          </Typography>
         </Alert>
       </Snackbar>
     </TableCell>

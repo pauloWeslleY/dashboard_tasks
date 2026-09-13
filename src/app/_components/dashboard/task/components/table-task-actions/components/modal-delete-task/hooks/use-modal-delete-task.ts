@@ -1,13 +1,8 @@
 import { useState } from 'react';
-import { loadTaskDelete, useStateTask } from '@/main/store/ducks/task';
-import { useAppDispatch, useAppSelector } from '@/main/store/hooks/use-redux';
 
-import { type UseModalDeleteTaskParams, type UseModalDeleteTaskProps } from '../types';
-
-export function useModalDeleteTask({ taskId }: UseModalDeleteTaskParams): UseModalDeleteTaskProps {
-  const [openModalDeleteTask, setOpenModalDeleteTask] = useState(false);
-  const tasks = useAppSelector(useStateTask);
-  const dispatch = useAppDispatch();
+export function useModalDeleteTask(taskId: string) {
+  const [openModalDeleteTask, setOpenModalDeleteTask] =
+    useState(false);
 
   function handlerOpenModalDeleteTask(): void {
     setOpenModalDeleteTask(true);
@@ -18,20 +13,15 @@ export function useModalDeleteTask({ taskId }: UseModalDeleteTaskParams): UseMod
   }
 
   function onCloseModalDeleteTask(): void {
-    if (tasks.isError || tasks.isPending) return;
     setOpenModalDeleteTask(false);
   }
 
   function handlerDeleteTask(): void {
-    dispatch(loadTaskDelete({ taskId }));
-
-    setTimeout(() => {
-      setOpenModalDeleteTask(false);
-    }, 3000);
+    console.log('Deleting task with ID:', taskId);
   }
 
   return {
-    isPendingTaskDelete: tasks.isPending,
+    isPendingTaskDelete: false,
     openModalDeleteTask,
     onCloseModalDeleteTask,
     handlerDeleteTask,

@@ -1,7 +1,7 @@
 import React, { type ReactNode } from 'react';
 import type { Viewport } from 'next';
 
-import '@/app/styles/global.css';
+import './styles/global.css';
 
 import { AppProvider } from '@/main/providers/app-provider';
 
@@ -14,7 +14,9 @@ interface LayoutProps {
   children: ReactNode;
 }
 
-export default function Layout({ children }: LayoutProps): React.JSX.Element {
+export default function Layout({
+  children,
+}: LayoutProps): React.JSX.Element {
   return (
     <html lang="en">
       <body>

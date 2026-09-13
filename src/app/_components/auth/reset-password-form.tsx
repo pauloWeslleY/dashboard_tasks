@@ -9,12 +9,16 @@ import Stack from '@mui/material/Stack';
 import Typography from '@mui/material/Typography';
 import { Controller } from 'react-hook-form';
 
-import { useResetPasswordForm } from './hooks';
+import { useResetPasswordForm } from './hooks/use-reset-password-form';
 
-export function ResetPasswordForm(): React.JSX.Element {
-  const { control, errors, isPending, handleSubmit, handlerResetPasswordOnSubmit } = useResetPasswordForm({
-    authClient,
-  });
+export function ResetPasswordForm() {
+  const {
+    control,
+    errors,
+    isPending,
+    handleSubmit,
+    handlerResetPasswordOnSubmit,
+  } = useResetPasswordForm(authClient);
 
   return (
     <Stack spacing={4}>
@@ -37,9 +41,15 @@ export function ResetPasswordForm(): React.JSX.Element {
             }}
           />
 
-          {errors.root && <Alert color="error">{errors.root.message}</Alert>}
+          {errors.root && (
+            <Alert color="error">{errors.root.message}</Alert>
+          )}
 
-          <Button disabled={isPending} type="submit" variant="contained">
+          <Button
+            disabled={isPending}
+            type="submit"
+            variant="contained"
+          >
             Send recovery link
           </Button>
         </Stack>

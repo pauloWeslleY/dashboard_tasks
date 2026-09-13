@@ -23,7 +23,7 @@ const StyledGridOverlay = styled('div')(({ theme }) => ({
   },
 }));
 
-export function CustomNoRowsOverlay(): React.JSX.Element {
+export function CustomNoRowsOverlay() {
   return (
     <StyledGridOverlay>
       <svg

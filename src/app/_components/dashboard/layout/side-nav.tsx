@@ -4,9 +4,8 @@ import React from 'react';
 import RouterLink from 'next/link';
 import { usePathname } from 'next/navigation';
 import { Logo } from '@/app/_components/core/logo';
+import { authClient } from '@/infra/auth/auth-client';
 import { paths } from '@/main/paths';
-import { useStateAuth } from '@/main/store/ducks/authentication';
-import { useStateMenuNav } from '@/main/store/ducks/menu-nav';
 import { useAppSelector } from '@/main/store/hooks/use-redux';
 import Avatar from '@mui/material/Avatar';
 import Box from '@mui/material/Box';
@@ -18,8 +17,8 @@ import { loadNavItems } from './config';
 import { renderNavItems } from './render-nav-items';
 
 export function SideNav(): React.JSX.Element {
-  const { data: loadUser } = useAppSelector(useStateAuth);
-  const menuNav = useAppSelector(useStateMenuNav);
+  const { data } = authClient.useSession();
+  const menuNav = useAppSelector((state) => state.menuNav);
   const pathname = usePathname();
 
   return (
@@ -29,12 +28,16 @@ export function SideNav(): React.JSX.Element {
         '--SideNav-color': 'var(--mui-palette-common-white)',
         '--NavItem-color': 'var(--mui-palette-neutral-300)',
         '--NavItem-hover-background': 'rgba(255, 255, 255, 0.04)',
-        '--NavItem-active-background': 'var(--mui-palette-primary-main)',
-        '--NavItem-active-color': 'var(--mui-palette-primary-contrastText)',
+        '--NavItem-active-background':
+          'var(--mui-palette-primary-main)',
+        '--NavItem-active-color':
+          'var(--mui-palette-primary-contrastText)',
         '--NavItem-disabled-color': 'var(--mui-palette-neutral-500)',
         '--NavItem-icon-color': 'var(--mui-palette-neutral-400)',
-        '--NavItem-icon-active-color': 'var(--mui-palette-primary-contrastText)',
-        '--NavItem-icon-disabled-color': 'var(--mui-palette-neutral-600)',
+        '--NavItem-icon-active-color':
+          'var(--mui-palette-primary-contrastText)',
+        '--NavItem-icon-disabled-color':
+          'var(--mui-palette-neutral-600)',
         bgcolor: 'var(--SideNav-background)',
         color: 'var(--SideNav-color)',
         display: { xs: 'none', lg: 'flex' },
@@ -52,7 +55,11 @@ export function SideNav(): React.JSX.Element {
       }}
     >
       <Stack spacing={2} sx={{ padding: 3 }}>
-        <Box component={RouterLink} href={paths.home} sx={{ display: 'inline-flex' }}>
+        <Box
+          component={RouterLink}
+          href={paths.home}
+          sx={{ display: 'inline-flex' }}
+        >
           <Logo color="light" height={32} width={122} />
         </Box>
 
@@ -65,20 +72,27 @@ export function SideNav(): React.JSX.Element {
             paddingBottom: 2,
           }}
         >
-          <Avatar src="/assets/avatar.png" sx={{ width: 55, height: 55 }} />
+          <Avatar
+            src="/assets/avatar.png"
+            sx={{ width: 55, height: 55 }}
+          />
 
-          {loadUser && (
+          {data && (
             <Box sx={{ textAlign: 'center', display: 'block' }}>
-              <Typography variant="subtitle1">{loadUser.username}</Typography>
+              <Typography variant="subtitle1">
+                {data.user.name}
+              </Typography>
               <Typography color="text.secondary" variant="body2">
-                {loadUser.email}
+                {data.user.email}
               </Typography>
             </Box>
           )}
         </Stack>
       </Stack>
 
-      <Divider sx={{ borderColor: 'var(--mui-palette-neutral-700)' }} />
+      <Divider
+        sx={{ borderColor: 'var(--mui-palette-neutral-700)' }}
+      />
 
       <Box component="nav" sx={{ flex: '1 1 auto', padding: '12px' }}>
         {renderNavItems({ pathname, items: loadNavItems })}

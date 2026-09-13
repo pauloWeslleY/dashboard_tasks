@@ -1,6 +1,10 @@
 import React from 'react';
 import { type Metadata } from 'next';
-import { DialogCreateTaskForm, TasksFilters, TasksTable } from '@/app/_components/dashboard';
+import {
+  DialogCreateTaskForm,
+  TasksFilters,
+  TasksTable,
+} from '@/app/_components/dashboard';
 import { config } from '@/main/config';
 import Stack from '@mui/material/Stack';
 import Typography from '@mui/material/Typography';

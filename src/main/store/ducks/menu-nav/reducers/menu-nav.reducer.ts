@@ -5,14 +5,11 @@ const menuNavSlice = createSlice({
   name: 'menu-nav',
   initialState: false,
   reducers: {
-    setMenuNav: (state) => {
-      return !state;
-    },
+    setMenuNav: (state) => !state,
   },
 });
 
 export const { setMenuNav } = menuNavSlice.actions;
 export const menuNavReducer = menuNavSlice.reducer;
-export function useStateMenuNav(state: RootStateProps): boolean {
-  return state.menuNav;
-}
+export const useStateMenuNav = (state: RootStateProps): boolean =>
+  state.menuNav;

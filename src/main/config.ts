@@ -18,5 +18,7 @@ export const config: Config = {
     themeColor: '#090a0b',
     url: getSiteURL(),
   },
-  logLevel: (process.env.NEXT_PUBLIC_LOG_LEVEL as keyof typeof LogLevel) ?? LogLevel.ALL,
+  logLevel:
+    (process.env.NEXT_PUBLIC_LOG_LEVEL as keyof typeof LogLevel) ??
+    LogLevel.ALL,
 };

@@ -11,22 +11,33 @@ import Typography from '@mui/material/Typography';
 import { Controller } from 'react-hook-form';
 
 import { InputField, InputPassword } from '../ui';
-import { useSignInForm } from './hooks';
+import { useSignInForm } from './hooks/use-sign-in-form';
 import { AuthLoading } from './loading';
 
-export function SignInForm(): React.JSX.Element {
-  const { errors, isError, control, isLoading, errorMessage, handleSubmit, handlerSignInOnSubmit } = useSignInForm();
+export function SignInForm() {
+  const {
+    errors,
+    control,
+    isSubmitting,
+    handleSubmit,
+    handlerSignInOnSubmit,
+  } = useSignInForm();
 
   return (
     <Stack spacing={4}>
-      <AuthLoading open={isLoading} message="Autenticando..." />
+      <AuthLoading open={isSubmitting} message="Autenticando..." />
 
       <Stack spacing={1}>
         <Typography variant="h4">Sign in</Typography>
 
         <Typography color="text.secondary" variant="body2">
           Don&apos;t have an account?{' '}
-          <Link component={RouterLink} href={paths.auth.signUp} underline="hover" variant="subtitle2">
+          <Link
+            component={RouterLink}
+            href={paths.auth.signUp}
+            underline="hover"
+            variant="subtitle2"
+          >
             Sign up
           </Link>
         </Typography>
@@ -58,14 +69,18 @@ export function SignInForm(): React.JSX.Element {
                   id="password"
                   label="Senha"
                   error={Boolean(errors.password)}
-                  helperText={errors.email?.message}
+                  helperText={errors.password?.message}
                 />
               );
             }}
           />
 
           <div>
-            <Link component={RouterLink} href={paths.auth.resetPassword} variant="subtitle2">
+            <Link
+              component={RouterLink}
+              href={paths.auth.resetPassword}
+              variant="subtitle2"
+            >
               Forgot password?
             </Link>
           </div>
@@ -76,13 +91,11 @@ export function SignInForm(): React.JSX.Element {
             </Alert>
           )}
 
-          {isError && (
-            <Alert severity="error" color="error">
-              {errorMessage}
-            </Alert>
-          )}
-
-          <Button disabled={isLoading} type="submit" variant="contained">
+          <Button
+            disabled={isSubmitting}
+            type="submit"
+            variant="contained"
+          >
             Sign in
           </Button>
         </Stack>

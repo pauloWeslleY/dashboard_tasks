@@ -17,31 +17,32 @@ import Typography from '@mui/material/Typography';
 import { PlusCircle as PlusCircleIcon } from '@phosphor-icons/react/dist/ssr/PlusCircle';
 import { Controller } from 'react-hook-form';
 
-import { useFormCreateTask } from './hooks';
+import { useFormCreateTask } from './hooks/use-form-create-task';
 
 const sizePlusIcon = 24;
 
-export function DialogCreateTaskForm(): React.JSX.Element {
+export function DialogCreateTaskForm() {
   const {
     openModalCreateTask,
     control,
     errors,
-    isPendingCreateTask,
-    hasFormCreateTaskMessage,
-    hasShowFormCreateTaskAlertError,
-    hasShowFormCreateTaskAlertSuccess,
-    loadTitleButtonCreateTask,
     handlerCreateTask,
     handleOpenModalCreateTask,
     handleCloseModalCreateTask,
     onCloseModalFormCreateTask,
+    isSubmitting,
   } = useFormCreateTask();
 
   return (
     <React.Fragment>
       <Button
         onClick={handleOpenModalCreateTask}
-        startIcon={<Box component={PlusCircleIcon} sx={{ width: sizePlusIcon, height: sizePlusIcon }} />}
+        startIcon={
+          <Box
+            component={PlusCircleIcon}
+            sx={{ width: sizePlusIcon, height: sizePlusIcon }}
+          />
+        }
         variant="contained"
       >
         Adicionar
@@ -65,7 +66,7 @@ export function DialogCreateTaskForm(): React.JSX.Element {
         }}
       >
         <Backdrop
-          open={isPendingCreateTask}
+          open={isSubmitting}
           sx={(theme) => ({
             color: theme.palette.common.white,
             zIndex: theme.zIndex.drawer + 1,
@@ -76,7 +77,12 @@ export function DialogCreateTaskForm(): React.JSX.Element {
           <CircularProgress color="primary" size={65} />
         </Backdrop>
 
-        <Typography id="task-dialog-title" component={DialogTitle} variant="h5" sx={{ color: 'primary.dark' }}>
+        <Typography
+          id="task-dialog-title"
+          component={DialogTitle}
+          variant="h5"
+          sx={{ color: 'primary.dark' }}
+        >
           Cadastrar Tarefa
         </Typography>
 
@@ -130,28 +136,35 @@ export function DialogCreateTaskForm(): React.JSX.Element {
               }}
             />
           </Stack>
-
-          <Box sx={{ width: '100%', paddingTop: 2, paddingX: 1 }}>
-            {hasShowFormCreateTaskAlertError && <Alert severity="error">{hasFormCreateTaskMessage}</Alert>}
-            {hasShowFormCreateTaskAlertSuccess && <Alert severity="success">{hasFormCreateTaskMessage}</Alert>}
-          </Box>
         </DialogContent>
 
         <DialogActions>
-          <Button onClick={handleCloseModalCreateTask} disabled={isPendingCreateTask} color="error" variant="outlined">
+          <Button
+            onClick={handleCloseModalCreateTask}
+            disabled={isSubmitting}
+            color="error"
+            variant="outlined"
+          >
             Cancelar
           </Button>
           <Button
             onClick={handlerCreateTask}
-            disabled={isPendingCreateTask}
+            disabled={isSubmitting}
             variant="contained"
             sx={{ display: 'flex', alignItem: 'center', gap: 1 }}
           >
-            {isPendingCreateTask && (
-              <CircularProgress size="20px" sx={{ color: isPendingCreateTask ? 'primary.light' : 'common.white' }} />
+            {isSubmitting && (
+              <CircularProgress
+                size="20px"
+                sx={{
+                  color: isSubmitting
+                    ? 'primary.light'
+                    : 'common.white',
+                }}
+              />
             )}
 
-            {loadTitleButtonCreateTask}
+            {isSubmitting ? 'Criando...' : 'Criar Tarefa'}
           </Button>
         </DialogActions>
       </Dialog>

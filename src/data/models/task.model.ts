@@ -1,5 +1,3 @@
-import { type ITask } from '@/domain/task/entities/task.interface';
+import { type schema } from '@/infra/database/schemas';
 
-export type TaskModel = Omit<ITask, 'createAt'> & {
-  createAt: string;
-};
+export type TaskModel = typeof schema.tasksTable.$inferSelect;

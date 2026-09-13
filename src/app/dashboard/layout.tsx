@@ -4,8 +4,7 @@ import React, { type ReactNode } from 'react';
 import { AuthGuard } from '@/app/_components/auth/auth-guard';
 import { MainNav } from '@/app/_components/dashboard/layout/main-nav';
 import { SideNav } from '@/app/_components/dashboard/layout/side-nav';
-import { useStateAuth } from '@/main/store/ducks/authentication';
-import { useStateMenuNav } from '@/main/store/ducks/menu-nav';
+import { authClient } from '@/infra/auth/auth-client';
 import { useAppSelector } from '@/main/store/hooks/use-redux';
 import Box from '@mui/material/Box';
 import Container from '@mui/material/Container';
@@ -17,9 +16,11 @@ interface LayoutProps {
   children: ReactNode;
 }
 
-export default function Layout({ children }: LayoutProps): React.JSX.Element {
-  const menuNav = useAppSelector(useStateMenuNav);
-  const userAuth = useAppSelector(useStateAuth);
+export default function Layout({
+  children,
+}: LayoutProps): React.JSX.Element {
+  const menuNav = useAppSelector((state) => state.menuNav);
+  const { data: userAuth } = authClient.useSession();
 
   return (
     <AuthGuard>
@@ -65,7 +66,7 @@ export default function Layout({ children }: LayoutProps): React.JSX.Element {
         </Box>
       </Box>
 
-      <AuthLoading open={userAuth.isLoading} message="Carregando..." />
+      <AuthLoading open={!userAuth} message="Carregando..." />
     </AuthGuard>
   );
 }

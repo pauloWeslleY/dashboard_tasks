@@ -1,28 +1,17 @@
-import { useCallback } from 'react';
-import { useRouter } from 'next/navigation';
-import { useError } from '@/app/hooks/use-error';
-import { loadAddAccount } from '@/main/store/ducks/add-account';
-import { type AddAccountType } from '@/main/store/ducks/add-account/types/add-account.type';
-import { useStateAuth } from '@/main/store/ducks/authentication';
-import { useAppDispatch, useAppSelector } from '@/main/store/hooks/use-redux';
+import { authClient } from '@/infra/auth/auth-client';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useForm } from 'react-hook-form';
 
 import { SignUpSchema } from '../schema/sign-up.schema';
-import { type SignUpFormType, type UseSignUpFormType } from '../types/use-sign-up-form.type';
+import { type SignUpFormType } from '../types/use-sign-up-form.type';
 
-export function useSignUpForm(): UseSignUpFormType {
-  const { isLoading, error, isError } = useAppSelector(useStateAuth);
-  const { errorMessage } = useError(error);
-  const dispatch = useAppDispatch();
-  const router = useRouter();
+export function useSignUpForm() {
   const {
     control,
+    setError,
     handleSubmit,
-    formState: { errors },
+    formState: { errors, isSubmitting },
   } = useForm<SignUpFormType>({
-    mode: 'all',
-    reValidateMode: 'onChange',
     resolver: zodResolver(SignUpSchema),
     defaultValues: {
       firstName: '',
@@ -33,31 +22,31 @@ export function useSignUpForm(): UseSignUpFormType {
     },
   });
 
-  function formattedDataSignUp(data: SignUpFormType): AddAccountType {
-    return {
-      firstName: data.firstName,
-      lastName: data.lastName,
-      email: data.email,
-      password: data.password,
-      username: data.username,
-    };
-  }
-
-  const handlerSignUpOnSubmit = useCallback(
-    (data: SignUpFormType): void => {
-      const formatDataSignUp = formattedDataSignUp(data);
-      dispatch(loadAddAccount(formatDataSignUp));
-      router.refresh();
-    },
-    [dispatch, router]
-  );
+  const handlerSignUpOnSubmit = async (data: SignUpFormType) => {
+    await authClient.signUp.email(
+      {
+        email: data.email,
+        password: data.password,
+        name: data.username,
+      },
+      {
+        onSuccess: (response) => {
+          console.log('Sign up successful:', response.data);
+        },
+        onError: (error) => {
+          setError('root', {
+            type: 'manual',
+            message: error.error.message,
+          });
+        },
+      }
+    );
+  };
 
   return {
     errors,
-    isError,
     control,
-    isLoading,
-    errorMessage,
+    isSubmitting,
     handleSubmit,
     handlerSignUpOnSubmit,
   };

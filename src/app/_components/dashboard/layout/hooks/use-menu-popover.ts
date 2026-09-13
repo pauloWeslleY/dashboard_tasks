@@ -1,21 +1,23 @@
 import { useRouter } from 'next/navigation';
-import { loadAuthSignOut, useStateAuth } from '@/main/store/ducks/authentication';
-import { useAppDispatch, useAppSelector } from '@/main/store/hooks/use-redux';
+import { authClient } from '@/infra/auth/auth-client';
 
-import { type UseMenuPopoverProps } from '../types';
-
-export function useMenuPopover(): UseMenuPopoverProps {
-  const { data: loadUser } = useAppSelector(useStateAuth);
-  const dispatch = useAppDispatch();
+export function useMenuPopover() {
+  const { data } = authClient.useSession();
   const router = useRouter();
+  const user = data?.user;
 
-  function handlerSignOut(): void {
-    dispatch(loadAuthSignOut());
-    router.refresh();
+  async function handlerSignOut(): Promise<void> {
+    await authClient.signOut({
+      fetchOptions: {
+        onSuccess: () => {
+          router.refresh();
+        },
+      },
+    });
   }
 
   return {
-    loadUser,
+    user,
     handlerSignOut,
   };
 }

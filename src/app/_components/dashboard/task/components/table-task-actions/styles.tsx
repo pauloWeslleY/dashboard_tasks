@@ -36,7 +36,10 @@ export const StyledMenu = styled((props: MenuProps) => (
         color: theme.palette.text.secondary,
       },
       '&:active': {
-        backgroundColor: alpha(theme.palette.primary.main, theme.palette.action.selectedOpacity),
+        backgroundColor: alpha(
+          theme.palette.primary.main,
+          theme.palette.action.selectedOpacity
+        ),
       },
     },
     ...theme.applyStyles('dark', {

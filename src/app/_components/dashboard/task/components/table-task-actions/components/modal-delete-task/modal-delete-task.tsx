@@ -10,11 +10,14 @@ import Stack from '@mui/material/Stack';
 import Typography from '@mui/material/Typography';
 import { Trash as TrashIcon } from '@phosphor-icons/react/dist/ssr/Trash';
 
-import { useModalDeleteTask } from './hooks';
+import { useModalDeleteTask } from './hooks/use-modal-delete-task';
 import * as S from './styles';
-import { type ModelDeleteProps } from './types';
 
-export function ModalDeleteTask({ taskId }: ModelDeleteProps): React.JSX.Element {
+interface ModelDeleteProps {
+  taskId: string;
+}
+
+export function ModalDeleteTask({ taskId }: ModelDeleteProps) {
   const {
     openModalDeleteTask,
     onCloseModalDeleteTask,
@@ -22,11 +25,17 @@ export function ModalDeleteTask({ taskId }: ModelDeleteProps): React.JSX.Element
     handlerDeleteTask,
     handlerOpenModalDeleteTask,
     handlerCloseModalDeleteTask,
-  } = useModalDeleteTask({ taskId });
+  } = useModalDeleteTask(taskId);
 
   return (
     <>
-      <Stack direction="row" spacing={1.5} component={MenuItem} disableRipple onClick={handlerOpenModalDeleteTask}>
+      <Stack
+        direction="row"
+        spacing={1.5}
+        component={MenuItem}
+        disableRipple
+        onClick={handlerOpenModalDeleteTask}
+      >
         <Box component={TrashIcon} />
         Excluir
       </Stack>
@@ -64,22 +73,44 @@ export function ModalDeleteTask({ taskId }: ModelDeleteProps): React.JSX.Element
               </Stack>
             </Backdrop>
 
-            <Stack direction="column" spacing={2} sx={{ alignItems: 'center', justifyContent: 'center' }}>
-              <Box component={TrashIcon} sx={{ fontSize: 75, color: 'error.main' }} />
+            <Stack
+              direction="column"
+              spacing={2}
+              sx={{ alignItems: 'center', justifyContent: 'center' }}
+            >
+              <Box
+                component={TrashIcon}
+                sx={{ fontSize: 75, color: 'error.main' }}
+              />
 
               <Stack>
-                <Typography variant="h5">Deseja excluir essa tarefa?</Typography>
+                <Typography variant="h5">
+                  Deseja excluir essa tarefa?
+                </Typography>
 
-                <Typography variant="caption" color="text.secondary" sx={{ display: 'block', textAlign: 'center' }}>
+                <Typography
+                  variant="caption"
+                  color="text.secondary"
+                  sx={{ display: 'block', textAlign: 'center' }}
+                >
                   ID: {taskId}
                 </Typography>
               </Stack>
 
               <Stack direction="row" spacing={1.5}>
-                <Button variant="outlined" color="secondary" onClick={handlerCloseModalDeleteTask}>
+                <Button
+                  variant="outlined"
+                  color="secondary"
+                  onClick={handlerCloseModalDeleteTask}
+                >
                   Cancelar
                 </Button>
-                <Button variant="contained" color="error" onClick={handlerDeleteTask} sx={{ width: 120 }}>
+                <Button
+                  variant="contained"
+                  color="error"
+                  onClick={handlerDeleteTask}
+                  sx={{ width: 120 }}
+                >
                   Excluir
                 </Button>
               </Stack>

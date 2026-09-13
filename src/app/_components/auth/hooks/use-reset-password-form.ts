@@ -1,15 +1,12 @@
 import { useCallback, useState } from 'react';
+import { type authClient } from '@/main/lib/auth/client';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useForm } from 'react-hook-form';
 
 import { ResetPasswordSchema } from '../schema/reset-password.schema';
-import {
-  type ResetPasswordFormType,
-  type UseResetPasswordFormProps,
-  type UseResetPasswordFormType,
-} from '../types/use-reset-password-form.types';
+import { type ResetPasswordFormType } from '../types/use-reset-password-form.types';
 
-export function useResetPasswordForm({ authClient }: UseResetPasswordFormProps): UseResetPasswordFormType {
+export function useResetPasswordForm(auth: typeof authClient) {
   const [isPending, setIsPending] = useState<boolean>(false);
   const {
     control,
@@ -27,7 +24,7 @@ export function useResetPasswordForm({ authClient }: UseResetPasswordFormProps):
     async (values: ResetPasswordFormType): Promise<void> => {
       setIsPending(true);
 
-      const { error } = await authClient.resetPassword(values);
+      const { error } = await auth.resetPassword(values);
 
       if (error) {
         setError('root', { type: 'server', message: error });
@@ -37,7 +34,7 @@ export function useResetPasswordForm({ authClient }: UseResetPasswordFormProps):
 
       setIsPending(false);
     },
-    [setError, authClient]
+    [setError, auth]
   );
 
   return {

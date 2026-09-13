@@ -1,6 +1,3 @@
-import { type IUserProfile } from '@/domain/user/entities/user.interface';
+import { type schema } from '@/infra/database/schemas';
 
-export type UserModel = Omit<IUserProfile, 'createdAt' | 'updateAt'> & {
-  createdAt: string;
-  updateAt: string | null;
-};
+export type UserModel = typeof schema.usersTable.$inferInsert;

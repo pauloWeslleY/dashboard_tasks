@@ -19,12 +19,17 @@ import dayjs from 'dayjs';
 import { Controller } from 'react-hook-form';
 
 import { InputField, SelectField } from '../../ui';
-import { useAccountInfo, useFormUserUpdate } from './hooks';
+import { useFormUserUpdate } from './hooks';
 import { states } from './states';
 
 export function AccountDetailsForm(): React.JSX.Element {
-  const { control, errors, handleSubmit, handlerUserUpdate } = useFormUserUpdate();
-  const { isPendingUserUpdate } = useAccountInfo();
+  const {
+    control,
+    errors,
+    handleSubmit,
+    handlerUserUpdate,
+    isPendingUserUpdate,
+  } = useFormUserUpdate();
 
   return (
     <form onSubmit={handleSubmit(handlerUserUpdate)}>
@@ -48,7 +53,10 @@ export function AccountDetailsForm(): React.JSX.Element {
             background: (theme) => theme.palette.neutral[800],
           }}
         >
-          <CircularProgress size={65} sx={{ color: 'primary.light' }} />
+          <CircularProgress
+            size={65}
+            sx={{ color: 'primary.light' }}
+          />
           <Typography variant="h3" color="primary.light">
             Loading...
           </Typography>
@@ -56,7 +64,10 @@ export function AccountDetailsForm(): React.JSX.Element {
       </Backdrop>
 
       <Card>
-        <CardHeader subheader="The information can be edited" title="Profile" />
+        <CardHeader
+          subheader="The information can be edited"
+          title="Profile"
+        />
 
         <Divider />
 
@@ -125,7 +136,8 @@ export function AccountDetailsForm(): React.JSX.Element {
                     name={name}
                     label="Data de Nascimento"
                     onChange={(date) => {
-                      const dateOfBirth = dayjs(date).format('YYYY-MM-DD');
+                      const dateOfBirth =
+                        dayjs(date).format('YYYY-MM-DD');
                       onChange(dateOfBirth);
                     }}
                     slots={{ textField: TextField }}

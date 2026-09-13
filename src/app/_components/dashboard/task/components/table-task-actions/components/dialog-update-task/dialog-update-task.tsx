@@ -15,30 +15,33 @@ import Stack from '@mui/material/Stack';
 import Typography from '@mui/material/Typography';
 import { PencilSimple as PencilSimpleIcon } from '@phosphor-icons/react/dist/ssr/PencilSimple';
 
-import { useFormUpdateTask } from './hooks';
+import { useFormUpdateTask } from './hooks/use-form-update-task';
 import { UpdateTask } from './update-task';
 
-export function DialogUpdateTask(): React.JSX.Element {
+export function DialogUpdateTask() {
   const {
     taskId,
-    openDialogUpdateTask,
     control,
     errors,
-    isPendingUpdateTask,
-    hasFormTaskUpdateMessage,
-    hasShowFormTaskUpdateAlertError,
-    hasShowFormTaskUpdateAlertSuccess,
+    isSubmitting,
     loadTitleButtonUpdateTask,
     colorIconCircleProgress,
+    onCloseDialogFormUpdateTask,
+    openDialogUpdateTask,
     handlerUpdateTask,
     handlerOpenDialogUpdateTask,
     handlerCloseDialogUpdateTask,
-    onCloseDialogFormUpdateTask,
   } = useFormUpdateTask();
 
   return (
     <React.Fragment>
-      <Stack direction="row" spacing={1.5} component={MenuItem} disableRipple onClick={handlerOpenDialogUpdateTask}>
+      <Stack
+        direction="row"
+        spacing={1.5}
+        component={MenuItem}
+        disableRipple
+        onClick={handlerOpenDialogUpdateTask}
+      >
         <Box component={PencilSimpleIcon} />
         Editar
       </Stack>
@@ -67,31 +70,35 @@ export function DialogUpdateTask(): React.JSX.Element {
             position: 'absolute',
             backgroundColor: 'rgba(0, 0, 0, 0.6)',
           })}
-          open={isPendingUpdateTask}
+          open={isSubmitting}
         >
           <CircularProgress color="primary" size={65} />
         </Backdrop>
 
-        <Typography id="task-dialog-title" component={DialogTitle} variant="h5" sx={{ color: 'primary.dark' }}>
+        <Typography
+          id="task-dialog-title"
+          component={DialogTitle}
+          variant="h5"
+          sx={{ color: 'primary.dark' }}
+        >
           Editar Tarefa{' '}
-          <Typography variant="caption" color="text.secondary" sx={{ display: 'block' }}>
+          <Typography
+            variant="caption"
+            color="text.secondary"
+            sx={{ display: 'block' }}
+          >
             ID: {taskId}
           </Typography>
         </Typography>
 
         <DialogContent>
           <UpdateTask control={control} errors={errors} />
-
-          <Box sx={{ width: '100%', paddingTop: 2, paddingX: 1 }}>
-            {hasShowFormTaskUpdateAlertError && <Alert severity="error">{hasFormTaskUpdateMessage}</Alert>}
-            {hasShowFormTaskUpdateAlertSuccess && <Alert severity="success">{hasFormTaskUpdateMessage}</Alert>}
-          </Box>
         </DialogContent>
 
         <DialogActions>
           <Button
             onClick={handlerCloseDialogUpdateTask}
-            disabled={isPendingUpdateTask}
+            disabled={isSubmitting}
             color="error"
             variant="outlined"
           >
@@ -101,13 +108,20 @@ export function DialogUpdateTask(): React.JSX.Element {
           <Button
             onClick={handlerUpdateTask}
             variant="contained"
-            disabled={isPendingUpdateTask}
-            startIcon={isPendingUpdateTask && <CircularProgress size="20px" sx={{ color: colorIconCircleProgress }} />}
+            disabled={isSubmitting}
+            startIcon={
+              isSubmitting && (
+                <CircularProgress
+                  size="20px"
+                  sx={{ color: colorIconCircleProgress }}
+                />
+              )
+            }
             sx={{
               display: 'flex',
-              alignItem: 'center',
+              alignItems: 'center',
               gap: 1,
-              width: isPendingUpdateTask ? 'max-content' : 120,
+              width: isSubmitting ? 'max-content' : 120,
             }}
           >
             {loadTitleButtonUpdateTask}

@@ -1,13 +1,15 @@
 import React from 'react';
-import Backdrop from '@mui/material/Backdrop';
+import Backdrop, { type BackdropProps } from '@mui/material/Backdrop';
 import Box from '@mui/material/Box';
 import CircularProgress from '@mui/material/CircularProgress';
 import Paper from '@mui/material/Paper';
 import Typography from '@mui/material/Typography';
 
-import { type AuthLoadingProps } from './types';
+interface AuthLoadingProps extends BackdropProps {
+  message: string;
+}
 
-export function AuthLoading({ message, ...props }: AuthLoadingProps): React.JSX.Element {
+export function AuthLoading({ message, ...props }: AuthLoadingProps) {
   return (
     <Backdrop
       {...props}
