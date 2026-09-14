@@ -1,6 +1,6 @@
 import { type IDatabase } from '@/infra/database';
 import { schema } from '@/infra/database/schemas';
-import { and, eq, ilike, or } from 'drizzle-orm';
+import { and, desc, eq, ilike, or } from 'drizzle-orm';
 
 import { type TaskModel } from '@/data/models/task.model';
 
@@ -91,7 +91,9 @@ export class TaskRepository implements ITaskRepository {
             ? eq(schema.tasksTable.status, params.status)
             : undefined
         )
-      );
+      )
+      .orderBy(desc(schema.tasksTable.createdAt));
+
     return result;
   }
 

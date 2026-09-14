@@ -52,41 +52,29 @@ export function TasksTable() {
         <Stack
           direction="row"
           spacing={1.5}
-          justifyContent="space-between"
+          sx={{ justifyContent: 'end', margin: 1.5 }}
         >
-          <Box sx={{ p: 2 }}>
-            <Typography variant="body2" color="primary.light">
-              Tarefas selecionadas: {selected.size}
-            </Typography>
-          </Box>
+          <ModalDeleteAllTask taskIds={selected} />
 
-          <Stack
-            direction="row"
-            spacing={1.5}
-            sx={{ justifyContent: 'end', margin: 1.5 }}
+          <Button
+            size="small"
+            variant="contained"
+            onClick={() => {
+              handlerToggleAllTask(true);
+            }}
           >
-            <ModalDeleteAllTask taskIds={selected} />
-
-            <Button
-              size="small"
-              variant="contained"
-              onClick={() => {
-                handlerToggleAllTask(true);
-              }}
-            >
-              Marcar todas
-            </Button>
-            <Button
-              size="small"
-              color="secondary"
-              variant="outlined"
-              onClick={() => {
-                handlerToggleAllTask(false);
-              }}
-            >
-              Desmarcar todas
-            </Button>
-          </Stack>
+            Marcar todas
+          </Button>
+          <Button
+            size="small"
+            color="secondary"
+            variant="outlined"
+            onClick={() => {
+              handlerToggleAllTask(false);
+            }}
+          >
+            Desmarcar todas
+          </Button>
         </Stack>
       </Collapse>
 
@@ -203,17 +191,30 @@ export function TasksTable() {
             <>
               <Divider />
 
-              <TablePagination
-                component="div"
-                count={getTasks.length}
-                onPageChange={handlerPageChange}
-                onRowsPerPageChange={handlerRowsPerPageChange}
-                page={page}
-                rowsPerPage={rowsPerPage}
-                rowsPerPageOptions={[5, 10, 25]}
-                labelRowsPerPage="Linhas por Paginas"
-                labelDisplayedRows={defaultLabelDisplayedRows}
-              />
+              <Stack
+                direction="row"
+                spacing={1.5}
+                justifyContent="space-between"
+                alignItems="center"
+              >
+                <Box sx={{ p: 2 }}>
+                  <Typography variant="body2" color="primary.light">
+                    Tarefas selecionadas: {selected.size}
+                  </Typography>
+                </Box>
+
+                <TablePagination
+                  component="div"
+                  count={getTasks.length}
+                  onPageChange={handlerPageChange}
+                  onRowsPerPageChange={handlerRowsPerPageChange}
+                  page={page}
+                  rowsPerPage={rowsPerPage}
+                  rowsPerPageOptions={[5, 10, 25]}
+                  labelRowsPerPage="Linhas por Paginas"
+                  labelDisplayedRows={defaultLabelDisplayedRows}
+                />
+              </Stack>
             </>
           )}
         </>

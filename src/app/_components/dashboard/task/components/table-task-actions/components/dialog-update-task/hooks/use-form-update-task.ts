@@ -29,7 +29,7 @@ export function useFormUpdateTask(
     setError,
     control,
     handleSubmit,
-    formState: { errors },
+    formState: { errors, isDirty },
   } = useForm<FormTaskType>({
     resolver: zodResolver(TaskSchema),
     defaultValues: {
@@ -38,7 +38,10 @@ export function useFormUpdateTask(
       category: '',
     },
   });
-  const { getTask } = useGetTaskId(openDialogUpdateTask, taskId);
+  const { getTask, isLoadingTask } = useGetTaskId(
+    openDialogUpdateTask,
+    taskId
+  );
 
   const { mutate: updateTask, isPending: isPendingUpdateTask } =
     useMutation({
@@ -65,6 +68,8 @@ export function useFormUpdateTask(
   useEffect(() => {
     getUpdateDataFormTask();
   }, [getUpdateDataFormTask]);
+
+  const isLoadingUpdateTask = isLoadingTask || isPendingUpdateTask;
 
   const loadTitleButtonUpdateTask = isPendingUpdateTask
     ? 'Carregando...'
@@ -96,6 +101,15 @@ export function useFormUpdateTask(
       });
       return;
     }
+
+    if (!isDirty) {
+      setError('root', {
+        type: 'manual',
+        message: 'Nenhuma alteração foi feita.',
+      });
+      return;
+    }
+
     updateTask(
       { ...data, id: taskId },
       {
@@ -129,7 +143,7 @@ export function useFormUpdateTask(
   });
 
   return {
-    taskId,
+    isLoadingUpdateTask,
     isPendingUpdateTask,
     control,
     errors,

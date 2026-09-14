@@ -1,8 +1,11 @@
 'use client';
 
+import Alert from '@mui/material/Alert';
 import Backdrop from '@mui/material/Backdrop';
+import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
 import CircularProgress from '@mui/material/CircularProgress';
+import Collapse from '@mui/material/Collapse';
 import Dialog from '@mui/material/Dialog';
 import DialogActions from '@mui/material/DialogActions';
 import DialogContent from '@mui/material/DialogContent';
@@ -27,6 +30,7 @@ export function DialogUpdateTask({
     control,
     errors,
     isPendingUpdateTask,
+    isLoadingUpdateTask,
     loadTitleButtonUpdateTask,
     colorIconCircleProgress,
     onCloseDialogFormUpdateTask,
@@ -59,7 +63,7 @@ export function DialogUpdateTask({
           position: 'absolute',
           backgroundColor: 'rgba(0, 0, 0, 0.6)',
         })}
-        open={isPendingUpdateTask}
+        open={isLoadingUpdateTask}
       >
         <CircularProgress color="primary" size={65} />
       </Backdrop>
@@ -82,6 +86,16 @@ export function DialogUpdateTask({
 
       <DialogContent>
         <UpdateTask control={control} errors={errors} />
+
+        <Collapse
+          in={Boolean(errors.root)}
+          timeout="auto"
+          unmountOnExit
+        >
+          <Box sx={{ px: 1 }}>
+            <Alert severity="error">{errors.root?.message}</Alert>
+          </Box>
+        </Collapse>
       </DialogContent>
 
       <DialogActions>

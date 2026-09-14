@@ -22,7 +22,7 @@ export function useGetTaskId(enabled = true, taskId?: string | null) {
 
   return {
     getTask,
-    isError: isErrorTask,
-    isLoading: isLoadingTask,
+    isErrorTask,
+    isLoadingTask,
   };
 }
