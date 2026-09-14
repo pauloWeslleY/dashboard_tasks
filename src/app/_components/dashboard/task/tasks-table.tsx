@@ -33,7 +33,7 @@ export function TasksTable() {
     rowsPerPage,
     getTasks,
     isLoadingTasks,
-    paginatedTasks,
+    tasks,
     selected,
     selectedSome,
     selectedAll,
@@ -108,7 +108,7 @@ export function TasksTable() {
       {!isLoadingTasks && (
         <>
           <Box sx={{ overflowX: 'auto' }}>
-            {paginatedTasks.length === 0 && (
+            {tasks.length === 0 && (
               <Stack
                 direction="column"
                 sx={{
@@ -123,7 +123,7 @@ export function TasksTable() {
               </Stack>
             )}
 
-            {paginatedTasks.length > 0 && (
+            {tasks.length > 0 && (
               <Table sx={{ minWidth: '800px' }}>
                 <TableHead>
                   <TableRow>
@@ -151,7 +151,7 @@ export function TasksTable() {
                 </TableHead>
 
                 <TableBody>
-                  {paginatedTasks.map((task) => {
+                  {tasks.map((task) => {
                     const isSelected = selected?.has(task.id);
 
                     return (
@@ -187,7 +187,7 @@ export function TasksTable() {
             )}
           </Box>
 
-          {paginatedTasks.length > 0 && (
+          {tasks.length > 0 && (
             <>
               <Divider />
 

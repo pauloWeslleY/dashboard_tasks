@@ -9,10 +9,7 @@ import { type LabelDisplayedRowsArgs } from '@mui/material';
 
 import { type TaskModel } from '@/data/models/task.model';
 
-import {
-  type ApplyTaskPaginationType,
-  type SelectAllRowTaskTableType,
-} from '../types';
+import { type SelectAllRowTaskTableType } from '../types';
 import { useGetTasks } from './use-get-tasks';
 import { useUpdateStatusTaskMutation } from './use-update-status-task-mutation';
 
@@ -48,6 +45,15 @@ export function useTaskTable() {
     'Status',
   ] satisfies string[];
 
+  const tasks = useMemo<TaskModel[]>(() => {
+    return getTasks.slice(
+      pageTask * rowsPerPageTask,
+      pageTask * rowsPerPageTask + rowsPerPageTask
+    );
+  }, [getTasks, pageTask, rowsPerPageTask]);
+
+  console.log(tasks);
+
   function handlerSelectAllRowTaskTable(
     event: ChangeEvent<HTMLInputElement>
   ) {
@@ -59,17 +65,6 @@ export function useTaskTable() {
     rowId,
   }: SelectAllRowTaskTableType) {
     event.target.checked ? selectOne(rowId) : deselectOne(rowId);
-  }
-
-  function applyPagination({
-    rows,
-    page,
-    rowsPerPage,
-  }: ApplyTaskPaginationType): TaskModel[] {
-    return rows.slice(
-      page * rowsPerPage,
-      page * rowsPerPage + rowsPerPage
-    );
   }
 
   // Handler para mudar a página
@@ -106,12 +101,6 @@ export function useTaskTable() {
     return `${from} – ${to} de ${count !== -1 ? count : `more than ${to}`}`;
   }
 
-  const paginatedTasks = applyPagination({
-    rows: getTasks,
-    page: pageTask,
-    rowsPerPage: rowsPerPageTask,
-  });
-
   return {
     getTasks,
     errorTasks,
@@ -130,6 +119,6 @@ export function useTaskTable() {
     defaultLabelDisplayedRows,
     page: pageTask,
     rowsPerPage: rowsPerPageTask,
-    paginatedTasks,
+    tasks,
   };
 }

@@ -10,6 +10,8 @@ import Dialog from '@mui/material/Dialog';
 import DialogActions from '@mui/material/DialogActions';
 import DialogContent from '@mui/material/DialogContent';
 import DialogTitle from '@mui/material/DialogTitle';
+import Paper from '@mui/material/Paper';
+import Stack from '@mui/material/Stack';
 import Typography from '@mui/material/Typography';
 
 import { useFormUpdateTask } from './hooks/use-form-update-task';
@@ -57,15 +59,18 @@ export function DialogUpdateTask({
       }}
     >
       <Backdrop
+        open={isLoadingUpdateTask}
         sx={(theme) => ({
           color: theme.palette.common.white,
           zIndex: theme.zIndex.drawer + 1,
           position: 'absolute',
           backgroundColor: 'rgba(0, 0, 0, 0.6)',
+          backdropFilter: 'blur(5px)',
         })}
-        open={isLoadingUpdateTask}
       >
-        <CircularProgress color="primary" size={65} />
+        <Stack component={Paper} sx={{ p: 1, borderRadius: 2 }}>
+          <CircularProgress color="primary" size={30} />
+        </Stack>
       </Backdrop>
 
       <Typography
