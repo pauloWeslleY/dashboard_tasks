@@ -1,16 +1,21 @@
 import { type ChangeEvent } from 'react';
 import { type SelectOptionsProps } from '@/app/_components/types/select-options.type';
-import { useAppDispatch } from '@/main/store/hooks/use-redux';
 import { type SelectChangeEvent } from '@mui/material/Select';
+import { debounce, parseAsString, useQueryStates } from 'nuqs';
 
 import { STATUS_TASK } from '../components/table-task-rows/types';
-import { type UseCustomerFilterProps } from '../types';
 
-export function useTaskFilter(): UseCustomerFilterProps {
-  const taskStatus: string = '';
-  const taskCategory: string = '';
-  const taskDescription: string = '';
-  const dispatch = useAppDispatch();
+export function useTaskFilter() {
+  const [taskFilter, setTaskFilter] = useQueryStates(
+    {
+      q: parseAsString.withDefault(''),
+      status: parseAsString.withDefault(''),
+      category: parseAsString.withDefault(''),
+    },
+    {
+      history: 'push',
+    }
+  );
 
   const loadSelectTaskStatus: SelectOptionsProps[] = [
     { value: STATUS_TASK.DONE as string, name: 'Completada' },
@@ -19,27 +24,31 @@ export function useTaskFilter(): UseCustomerFilterProps {
 
   function handlerChangeInputTaskFilterCategory(
     event: ChangeEvent<HTMLSelectElement> | SelectChangeEvent<unknown>
-  ): void {
-    console.log(event.target.value as string);
+  ) {
+    setTaskFilter({ category: event.target.value as string });
   }
 
   function handlerChangeInputTaskFilterStatus(
     event: ChangeEvent<HTMLSelectElement> | SelectChangeEvent<unknown>
-  ): void {
-    console.log(event.target.value as string);
+  ) {
+    setTaskFilter({ status: event.target.value as string });
   }
 
   function handlerChangeInputTaskFilterDescription(
     event: ChangeEvent<HTMLInputElement>
-  ): void {
-    console.log(event.target.value as string);
+  ) {
+    setTaskFilter(
+      { q: event.target.value },
+      {
+        limitUrlUpdates:
+          event.target.value !== '' ? debounce(500) : undefined,
+      }
+    );
   }
 
   return {
     loadSelectTaskStatus,
-    taskStatus,
-    taskCategory,
-    taskDescription,
+    taskFilter,
     handlerChangeInputTaskFilterStatus,
     handlerChangeInputTaskFilterCategory,
     handlerChangeInputTaskFilterDescription,

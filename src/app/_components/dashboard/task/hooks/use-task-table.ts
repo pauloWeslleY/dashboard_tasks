@@ -35,28 +35,6 @@ export function useTaskTable() {
   const { selectAll, deselectAll, selectOne, deselectOne, selected } =
     useSelection(taskIds);
 
-  // const loadTaskListSearch = useMemo<TaskModel[]>(() => {
-  //   const taskDescriptionRegexp = new RegExp(taskDescription, 'i');
-  //   const taskCategoryRegexp = new RegExp(taskCategory, 'i');
-
-  //   return getTasks?.filter((task) => {
-  //     const status: string = task.status
-  //       ? STATUS_TASK.DONE
-  //       : STATUS_TASK.NOT_DONE;
-  //     const filteredNameDescriptions = `${task.name} ${task.description}`;
-
-  //     const filteredStatusTask = taskStatus
-  //       ? status === taskStatus
-  //       : task;
-
-  //     return (
-  //       filteredNameDescriptions.match(taskDescriptionRegexp) &&
-  //       task.category.match(taskCategoryRegexp) &&
-  //       filteredStatusTask
-  //     );
-  //   });
-  // }, [loadTaskList, taskDescription, taskCategory, taskStatus]);
-
   const selectedSize = selected?.size ?? 0;
   const selectedSome =
     selectedSize > 0 && selectedSize < getTasks.length;

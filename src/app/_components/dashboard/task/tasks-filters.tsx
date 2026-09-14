@@ -13,10 +13,8 @@ import { useTaskFilter } from './hooks';
 
 export function TasksFilters(): React.JSX.Element {
   const {
-    taskStatus,
-    taskCategory,
-    taskDescription,
     loadSelectTaskStatus,
+    taskFilter,
     handlerChangeInputTaskFilterStatus,
     handlerChangeInputTaskFilterCategory,
     handlerChangeInputTaskFilterDescription,
@@ -33,7 +31,7 @@ export function TasksFilters(): React.JSX.Element {
           placeholder="Pesquisar tarefas"
           fullWidth
           size="small"
-          value={taskDescription}
+          value={taskFilter.q}
           onChange={handlerChangeInputTaskFilterDescription}
           startAdornment={
             <InputAdornment position="start">
@@ -46,7 +44,7 @@ export function TasksFilters(): React.JSX.Element {
           id="category"
           label="Categoria da tarefa"
           placeholder="Selecione a categoria da tarefa"
-          value={taskCategory}
+          value={taskFilter.category}
           onChange={handlerChangeInputTaskFilterCategory}
           options={loadCategoryOptions}
           sx={{ minWidth: '300px' }}
@@ -56,7 +54,7 @@ export function TasksFilters(): React.JSX.Element {
           id="taskStatus"
           label="Status da tarefa"
           placeholder="Selecione o status da tarefa"
-          value={taskStatus}
+          value={taskFilter.status}
           onChange={handlerChangeInputTaskFilterStatus}
           options={loadSelectTaskStatus}
           sx={{ minWidth: '300px' }}

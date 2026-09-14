@@ -48,158 +48,175 @@ export function TasksTable() {
 
   return (
     <Card>
-      <Backdrop
-        open={isLoadingTasks}
-        sx={(theme) => ({
-          color: theme.palette.common.white,
-          zIndex: theme.zIndex.drawer + 2,
-          backdropFilter: 'blur(3px)',
-        })}
-      >
-        <Stack
-          component={Paper}
-          direction="row"
-          spacing={2}
-          sx={{
-            alignItems: 'center',
-            paddingX: 1.5,
-            paddingY: 1,
-            borderRadius: 2,
-            background: (theme) => theme.palette.neutral[800],
-          }}
-        >
-          <CircularProgress
-            size={40}
-            sx={{ color: 'primary.light' }}
-          />
-          <Typography variant="h3" color="primary.light">
-            Loading...
-          </Typography>
-        </Stack>
-      </Backdrop>
-
       <Collapse in={selectedAll}>
         <Stack
           direction="row"
           spacing={1.5}
-          sx={{ justifyContent: 'end', margin: 1.5 }}
+          justifyContent="space-between"
         >
-          <ModalDeleteAllTask taskIds={selected} />
+          <Box sx={{ p: 2 }}>
+            <Typography variant="body2" color="primary.light">
+              Tarefas selecionadas: {selected.size}
+            </Typography>
+          </Box>
 
-          <Button
-            size="small"
-            variant="contained"
-            onClick={() => {
-              handlerToggleAllTask(true);
-            }}
+          <Stack
+            direction="row"
+            spacing={1.5}
+            sx={{ justifyContent: 'end', margin: 1.5 }}
           >
-            Marcar todas
-          </Button>
-          <Button
-            size="small"
-            color="secondary"
-            variant="outlined"
-            onClick={() => {
-              handlerToggleAllTask(false);
-            }}
-          >
-            Desmarcar todas
-          </Button>
+            <ModalDeleteAllTask taskIds={selected} />
+
+            <Button
+              size="small"
+              variant="contained"
+              onClick={() => {
+                handlerToggleAllTask(true);
+              }}
+            >
+              Marcar todas
+            </Button>
+            <Button
+              size="small"
+              color="secondary"
+              variant="outlined"
+              onClick={() => {
+                handlerToggleAllTask(false);
+              }}
+            >
+              Desmarcar todas
+            </Button>
+          </Stack>
         </Stack>
       </Collapse>
 
-      <Box sx={{ overflowX: 'auto' }}>
-        {paginatedTasks.length === 0 && (
+      <Collapse in={isLoadingTasks}>
+        <Box sx={{ overflowX: 'auto', padding: 5 }}>
           <Stack
-            direction="column"
+            component={Paper}
+            direction="row"
+            spacing={2}
             sx={{
-              width: '100%',
-              height: 250,
+              mx: 'auto',
+              width: 'fit-content',
               alignItems: 'center',
-              justifyContent: 'center',
-              padding: 1.5,
+              paddingX: 1.5,
+              paddingY: 1,
+              borderRadius: 2,
+              background: (theme) => theme.palette.neutral[200],
             }}
           >
-            <CustomNoRowsOverlay />
+            <CircularProgress
+              size={30}
+              sx={{ color: 'primary.light' }}
+            />
+            <Typography variant="h4" color="primary.light">
+              Carregando tarefas...
+            </Typography>
           </Stack>
-        )}
+        </Box>
+      </Collapse>
 
-        {paginatedTasks.length > 0 && (
-          <Table sx={{ minWidth: '800px' }}>
-            <TableHead>
-              <TableRow>
-                <TableCell padding="checkbox">
-                  <Checkbox
-                    checked={selectedAll}
-                    indeterminate={selectedSome}
-                    onChange={handlerSelectAllRowTaskTable}
-                  />
-                </TableCell>
+      {!isLoadingTasks && (
+        <>
+          <Box sx={{ overflowX: 'auto' }}>
+            {paginatedTasks.length === 0 && (
+              <Stack
+                direction="column"
+                sx={{
+                  width: '100%',
+                  height: 250,
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  padding: 1.5,
+                }}
+              >
+                <CustomNoRowsOverlay />
+              </Stack>
+            )}
 
-                {loadTaskTableHeader.map((props) => {
-                  return (
-                    <TableCell
-                      key={props}
-                      sx={{ textAlign: 'center' }}
-                    >
-                      {props}
-                    </TableCell>
-                  );
-                })}
-
-                <TableCell />
-              </TableRow>
-            </TableHead>
-
-            <TableBody>
-              {paginatedTasks.map((task) => {
-                const isSelected = selected?.has(task.id);
-
-                return (
-                  <TableRow hover key={task.id} selected={isSelected}>
+            {paginatedTasks.length > 0 && (
+              <Table sx={{ minWidth: '800px' }}>
+                <TableHead>
+                  <TableRow>
                     <TableCell padding="checkbox">
                       <Checkbox
-                        checked={isSelected}
-                        onChange={(event) => {
-                          handlerSelectRowTaskTable({
-                            event,
-                            rowId: task.id,
-                          });
-                        }}
+                        checked={selectedAll}
+                        indeterminate={selectedSome}
+                        onChange={handlerSelectAllRowTaskTable}
                       />
                     </TableCell>
 
-                    <TableTaskRows tasks={task} />
+                    {loadTaskTableHeader.map((props) => {
+                      return (
+                        <TableCell
+                          key={props}
+                          sx={{ textAlign: 'center' }}
+                        >
+                          {props}
+                        </TableCell>
+                      );
+                    })}
 
-                    <TableTaskActions
-                      taskId={task.id}
-                      taskStatus={task.status}
-                      isSelected={isSelected}
-                    />
+                    <TableCell />
                   </TableRow>
-                );
-              })}
-            </TableBody>
-          </Table>
-        )}
-      </Box>
+                </TableHead>
 
-      {paginatedTasks.length > 0 && (
-        <React.Fragment>
-          <Divider />
+                <TableBody>
+                  {paginatedTasks.map((task) => {
+                    const isSelected = selected?.has(task.id);
 
-          <TablePagination
-            component="div"
-            count={getTasks.length}
-            onPageChange={handlerPageChange}
-            onRowsPerPageChange={handlerRowsPerPageChange}
-            page={page}
-            rowsPerPage={rowsPerPage}
-            rowsPerPageOptions={[5, 10, 25]}
-            labelRowsPerPage="Linhas por Paginas"
-            labelDisplayedRows={defaultLabelDisplayedRows}
-          />
-        </React.Fragment>
+                    return (
+                      <TableRow
+                        hover
+                        key={task.id}
+                        selected={isSelected}
+                      >
+                        <TableCell padding="checkbox">
+                          <Checkbox
+                            checked={isSelected}
+                            onChange={(event) => {
+                              handlerSelectRowTaskTable({
+                                event,
+                                rowId: task.id,
+                              });
+                            }}
+                          />
+                        </TableCell>
+
+                        <TableTaskRows tasks={task} />
+
+                        <TableTaskActions
+                          taskId={task.id}
+                          taskStatus={task.status}
+                          isSelected={isSelected}
+                        />
+                      </TableRow>
+                    );
+                  })}
+                </TableBody>
+              </Table>
+            )}
+          </Box>
+
+          {paginatedTasks.length > 0 && (
+            <>
+              <Divider />
+
+              <TablePagination
+                component="div"
+                count={getTasks.length}
+                onPageChange={handlerPageChange}
+                onRowsPerPageChange={handlerRowsPerPageChange}
+                page={page}
+                rowsPerPage={rowsPerPage}
+                rowsPerPageOptions={[5, 10, 25]}
+                labelRowsPerPage="Linhas por Paginas"
+                labelDisplayedRows={defaultLabelDisplayedRows}
+              />
+            </>
+          )}
+        </>
       )}
     </Card>
   );

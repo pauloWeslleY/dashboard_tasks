@@ -1,5 +1,6 @@
 import React, { type ReactNode } from 'react';
 import type { Viewport } from 'next';
+import { NuqsAdapter } from 'nuqs/adapters/next/app';
 
 import './styles/global.css';
 
@@ -20,7 +21,9 @@ export default function Layout({
   return (
     <html lang="en">
       <body>
-        <AppProvider>{children}</AppProvider>
+        <AppProvider>
+          <NuqsAdapter>{children}</NuqsAdapter>
+        </AppProvider>
       </body>
     </html>
   );

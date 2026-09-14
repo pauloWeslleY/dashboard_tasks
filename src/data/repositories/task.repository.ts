@@ -1,6 +1,6 @@
 import { type IDatabase } from '@/infra/database';
 import { schema } from '@/infra/database/schemas';
-import { eq } from 'drizzle-orm';
+import { and, eq, ilike, or } from 'drizzle-orm';
 
 import { type TaskModel } from '@/data/models/task.model';
 
@@ -62,6 +62,37 @@ export class TaskRepository implements ITaskRepository {
     await this.db
       .delete(schema.tasksTable)
       .where(eq(schema.tasksTable.id, id));
+  }
+
+  async find(
+    params: Partial<{
+      query: string;
+      status: boolean;
+      category: string;
+    }>
+  ): Promise<TaskModel[]> {
+    const queryFilter = params.query
+      ? or(
+          ilike(schema.tasksTable.name, `%${params.query}%`),
+          ilike(schema.tasksTable.description, `%${params.query}%`)
+        )
+      : undefined;
+
+    const result = await this.db
+      .select()
+      .from(schema.tasksTable)
+      .where(
+        and(
+          queryFilter,
+          params.category
+            ? eq(schema.tasksTable.category, params.category)
+            : undefined,
+          typeof params.status === 'boolean'
+            ? eq(schema.tasksTable.status, params.status)
+            : undefined
+        )
+      );
+    return result;
   }
 
   async findAll(): Promise<TaskModel[]> {

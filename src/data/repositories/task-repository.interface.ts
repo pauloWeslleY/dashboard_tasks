@@ -17,4 +17,11 @@ export interface ITaskRepository {
   delete(id: string): Promise<void>;
   findAll(): Promise<TaskModel[]>;
   findById(id: string): Promise<TaskModel | null>;
+  find(
+    params: Partial<{
+      query: string;
+      status: boolean;
+      category: string;
+    }>
+  ): Promise<TaskModel[]>;
 }
